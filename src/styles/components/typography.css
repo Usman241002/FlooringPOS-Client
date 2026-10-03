@@ -1,0 +1,23 @@
+.display {
+  font: var(--display);
+  /*letter-spacing: var(--display-tracking);*/
+  color: var(--text-primary);
+}
+
+.heading {
+  font: var(--heading);
+  /*letter-spacing: var(--heading);*/
+  color: var(--text-primary);
+}
+
+.body {
+  font: var(--body);
+  color: var(--text-secondary);
+}
+
+.label {
+  font: var(--label);
+  /*letter-spacing: var(--label-tracking);*/
+  color: var(--text-secondary);
+  text-transform: uppercase;
+}

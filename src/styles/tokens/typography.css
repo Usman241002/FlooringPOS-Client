@@ -1,0 +1,19 @@
+:root {
+
+  /*TODO: Add tracking to each font */
+  /* Font */
+  --font: 'Inter', sans-serif;
+
+  /* Display */
+  --display: 400 34px/normal var(--font);
+
+  /* Headings */
+  --heading: 400 26px/normal var(--font);
+
+  /* Body */
+  /* Body */
+  --body: 400 14px/145% var(--font);
+
+  /* Labels */
+  --label: 700 11px/normal var(--font);
+}

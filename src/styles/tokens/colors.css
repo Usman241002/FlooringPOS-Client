@@ -1,0 +1,28 @@
+:root {
+  /* Backgrounds */
+  --bg: #F4F6F8;
+  --surface: #ffffff;
+
+  /* Text */
+  --text-primary: #172033;
+  --text-secondary: #687386;
+
+  /* Accent */
+  --primary: #1769E0;
+  --secondary: #162033;
+  --success: #16805B;
+  --danger: #C43D4B;
+  --warning: #B96B0B;
+  --inactive: #687386;
+
+  --primary-bg: #EAF2FF;
+  --success-bg: #E8F7F1;
+  --danger-bg: #FDECEF;
+  --warning-bg: #FFF4DD;
+  --inactive-bg: #F8FAFC;
+
+
+  /* UI */
+  --border: #DDE3EA;
+  --hover: #e2ebf6;
+}
