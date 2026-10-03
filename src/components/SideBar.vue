@@ -1,5 +1,26 @@
 <script setup>
-import { LayoutOutlined } from '@ant-design/icons-vue'
+import {
+  AppstoreOutlined,
+  ColumnWidthOutlined,
+  FileOutlined,
+  LayoutOutlined,
+  SettingOutlined,
+  ShoppingCartOutlined,
+  UsergroupAddOutlined,
+} from '@ant-design/icons-vue'
+import SideBarItem from '@/components/SideBarItem.vue'
+
+const menuItems = [
+  {
+    name: 'Sell',
+    component: ShoppingCartOutlined,
+  },
+  { name: 'Measurements', component: ColumnWidthOutlined },
+  { name: 'Quotes', component: FileOutlined },
+  { name: 'Customers', component: UsergroupAddOutlined },
+  { name: 'Products', component: AppstoreOutlined },
+  { name: 'Settings', component: SettingOutlined },
+]
 </script>
 
 <template>
@@ -9,13 +30,18 @@ import { LayoutOutlined } from '@ant-design/icons-vue'
         <LayoutOutlined class="icon" />
       </AFlex>
 
-      <AFlex vertical>
+      <AFlex align="start" vertical>
         <h3>FlooringPOS</h3>
         <h6>Retail POS System</h6>
       </AFlex>
     </AFlex>
 
-    <AFlex class="nav" vertical></AFlex>
+    <AFlex class="nav" vertical>
+      <SideBarItem v-for="item in menuItems" :key="item.name" class="nav-item">
+        <component :is="item.component" class="sidebar-item-icon" />
+        {{ item.name }}
+      </SideBarItem>
+    </AFlex>
   </AFlex>
 </template>
 
@@ -43,9 +69,13 @@ import { LayoutOutlined } from '@ant-design/icons-vue'
 }
 
 .logo-container h6 {
-  color: var(--border) !important;
+  color: #aab5c5;
   font-weight: normal;
   font-size: 0.75rem;
+}
+
+.nav {
+  gap: var(--space-sm);
 }
 
 .icon-container {
@@ -59,5 +89,14 @@ import { LayoutOutlined } from '@ant-design/icons-vue'
 .icon {
   color: var(--surface);
   font-size: 1.25rem;
+}
+
+.sidebar-item-icon {
+  font-size: 1.25rem;
+}
+
+.sidebar-item-icon:hover {
+  color: var(--surface);
+  cursor: pointer;
 }
 </style>
