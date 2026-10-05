@@ -5,7 +5,7 @@ import SideBar from '@/components/SideBar.vue'
   <ALayout :style="{ minHeight: '100vh' }">
     <ALayoutSider><SideBar /></ALayoutSider>
     <ALayout>
-      <ALayoutContent><RouterView /></ALayoutContent>
+      <ALayoutContent :style="{ background: 'var(--bg)' }"><RouterView /></ALayoutContent>
     </ALayout>
   </ALayout>
 </template>

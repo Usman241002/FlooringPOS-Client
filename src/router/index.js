@@ -1,7 +1,11 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Home from '../views/Home.vue'
-import ComponentPreview from '../views/ComponentPreview.vue'
 import MainLayout from '@/layouts/MainLayout.vue'
+import SalesView from '@/views/SalesView.vue'
+import MeasurementsView from '@/views/MeasurementsView.vue'
+import QuotesView from '@/views/QuotesView.vue'
+import CustomersView from '@/views/CustomersView.vue'
+import ProductsView from '@/views/ProductsView.vue'
+import SettingsView from '@/views/SettingsView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -11,14 +15,34 @@ const router = createRouter({
       component: MainLayout,
       children: [
         {
-          path: '/',
-          name: 'Home',
-          component: Home,
+          path: 'sell',
+          name: 'Sale',
+          component: SalesView,
         },
         {
-          path: '/components',
-          name: 'ComponentPreview',
-          component: ComponentPreview,
+          path: 'measurements',
+          name: 'Measurements',
+          component: MeasurementsView,
+        },
+        {
+          path: 'quotes',
+          name: 'Quotes',
+          component: QuotesView,
+        },
+        {
+          path: 'customers',
+          name: 'Customers',
+          component: CustomersView,
+        },
+        {
+          path: 'products',
+          name: 'Products',
+          component: ProductsView,
+        },
+        {
+          path: 'settings',
+          name: 'Settings',
+          component: SettingsView,
         },
       ],
     },

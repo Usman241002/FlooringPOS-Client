@@ -14,12 +14,13 @@ const menuItems = [
   {
     name: 'Sell',
     component: ShoppingCartOutlined,
+    to: '/sell',
   },
-  { name: 'Measurements', component: ColumnWidthOutlined },
-  { name: 'Quotes', component: FileOutlined },
-  { name: 'Customers', component: UsergroupAddOutlined },
-  { name: 'Products', component: AppstoreOutlined },
-  { name: 'Settings', component: SettingOutlined },
+  { name: 'Measurements', component: ColumnWidthOutlined, to: '/measurements' },
+  { name: 'Quotes', component: FileOutlined, to: '/quotes' },
+  { name: 'Customers', component: UsergroupAddOutlined, to: '/customers' },
+  { name: 'Products', component: AppstoreOutlined, to: '/products' },
+  { name: 'Settings', component: SettingOutlined, to: '/settings' },
 ]
 </script>
 
@@ -37,7 +38,7 @@ const menuItems = [
     </AFlex>
 
     <AFlex class="nav" vertical>
-      <SideBarItem v-for="item in menuItems" :key="item.name" class="nav-item">
+      <SideBarItem v-for="item in menuItems" :key="item.name" :to="item.to" class="nav-item">
         <component :is="item.component" class="sidebar-item-icon" />
         {{ item.name }}
       </SideBarItem>
