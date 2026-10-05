@@ -12,7 +12,7 @@
       </p>
     </AFlex>
 
-    <AFlex gap="var(--space-md)">
+    <AFlex class="actions-container">
       <slot name="actions" />
     </AFlex>
   </AFlex>
@@ -23,7 +23,10 @@
   padding: var(--space-lg) var(--space-xl);
   background-color: var(--surface);
 }
-
+.actions-container {
+  gap: var(--space-md);
+  flex-direction: row-reverse;
+}
 .heading {
   font-size: 1.25rem;
 }

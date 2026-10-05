@@ -6,6 +6,7 @@ import QuotesView from '@/views/QuotesView.vue'
 import CustomersView from '@/views/CustomersView.vue'
 import ProductsView from '@/views/ProductsView.vue'
 import SettingsView from '@/views/SettingsView.vue'
+import ComponentPreview from '@/views/ComponentPreview.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -43,6 +44,11 @@ const router = createRouter({
           path: 'settings',
           name: 'Settings',
           component: SettingsView,
+        },
+        {
+          path: 'components',
+          name: 'Components',
+          component: ComponentPreview,
         },
       ],
     },

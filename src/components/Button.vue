@@ -1,11 +1,21 @@
 <script setup>
-defineProps({
-  variant: 'primary' | 'secondary' | 'outlined' | 'danger',
+const props = defineProps({
+  variant: {
+    type: String,
+    default: 'primary',
+    validator: (value) => ['primary', 'secondary', 'outlined', 'danger'].includes(value),
+  },
+  type: {
+    type: String,
+    default: 'button',
+  },
 })
+
+const emit = defineEmits(['click'])
 </script>
 
 <template>
-  <button :class="[variant, 'container']" :type="type" @click="emit('click', $event)">
+  <button :class="[props.variant, 'container']" :type="props.type" @click="emit('click', $event)">
     <span class="content">
       <slot />
     </span>
@@ -28,13 +38,14 @@ defineProps({
 }
 
 .content {
+  position: relative;
+  z-index: 1;
+
   display: flex;
   justify-content: space-around;
   align-items: center;
-  text-align: center;
+
   gap: var(--space-sm);
-  position: relative;
-  z-index: 1;
 
   font: var(--body);
   text-transform: capitalize;
@@ -46,14 +57,12 @@ defineProps({
   border: 1px solid transparent;
 }
 
-/* Secondary */
 .secondary {
   color: var(--text-primary);
   background-color: var(--surface);
   border: 1px solid var(--border);
 }
 
-/* Outlined */
 .outlined {
   color: var(--text-primary);
   background-color: transparent;
