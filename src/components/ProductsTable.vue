@@ -29,10 +29,9 @@ const columns = [
     title: 'Cost/M²',
     dataIndex: 'costPriceM2',
     key: 'costPriceM2',
-    customCell: () => ({ class: 'costPrice' }),
   },
   { title: 'Margin', dataIndex: 'margin', key: 'margin' },
-  {title: "Status", dataIndex: "isActive", key: "isActive"},
+  { title: 'Status', dataIndex: 'isActive', key: 'isActive' },
 ]
 
 function calculateMargin(record) {
@@ -55,22 +54,22 @@ function calculateMargin(record) {
 
 <template>
   <div class="table-container">
-    <a-alert v-if="error" type="error" :message="`Failed to load products: ${error}`" show-icon />
+    <a-alert v-if="error" :message="`Failed to load products: ${error}`" show-icon type="error" />
 
     <a-table
       v-else
       :columns="columns"
       :data-source="products"
       :loading="loading"
+      :locale="{ emptyText: 'No products found.' }"
       :pagination="pagination"
+      row-key="id"
       @change="
         (pag) => {
           pagination.current = pag.current
           pagination.pageSize = pag.pageSize
         }
       "
-      row-key="id"
-      :locale="{ emptyText: 'No products found.' }"
     >
       <template #bodyCell="{ column, record }">
         <template v-if="column.key === 'brand' || column.key === 'category'">
@@ -97,7 +96,6 @@ function calculateMargin(record) {
         </template>
 
         <template v-else-if="column.key === 'isActive'">
-
           <Tag v-if="record.isActive" variant="success">Active</Tag>
           <Tag v-else variant="inactive">Inactive</Tag>
         </template>

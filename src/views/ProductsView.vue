@@ -14,8 +14,8 @@ const useProductsStore = productsStore()
 const useCategoriesStore = categoriesStore()
 
 const searchInput = ref('')
-
 const selectedCategory = ref(undefined)
+const productFormVisibility = ref(false)
 
 const filteredProducts = computed(() => {
   const query = searchInput.value.trim().toLowerCase()
@@ -33,8 +33,16 @@ const filteredProducts = computed(() => {
   })
 })
 
+const categoryOptions = computed(() =>
+  useCategoriesStore.categories.map((category) => ({
+    label: category.name,
+    value: category.id,
+  })),
+)
+
 onMounted(() => {
   useProductsStore.fetchProducts()
+  useCategoriesStore.fetchCategories()
 })
 </script>
 <template>
@@ -42,7 +50,7 @@ onMounted(() => {
     <template #title>Products</template>
     <template #subtitle>{{ useProductsStore.products.length }} active - 14 inactive</template>
     <template #actions>
-      <Button><PlusOutlined />Add Product</Button>
+      <Button @click="() => (productFormVisibility = true)"><PlusOutlined />Add Product</Button>
     </template>
   </Header>
 
@@ -62,7 +70,7 @@ onMounted(() => {
 
         <ASelect
           v-model:value="selectedCategory"
-          :options="useCategoriesStore.categories"
+          :options="categoryOptions"
           allow-clear
           class="category"
           placeholder="All categories"
@@ -72,7 +80,7 @@ onMounted(() => {
       <AFlex class="content">
         <ProductsTable :products="filteredProducts" />
 
-        <AddProductForm />
+        <AddProductForm v-if="productFormVisibility" @close="productFormVisibility = false" />
       </AFlex>
     </AFlex>
   </Section>

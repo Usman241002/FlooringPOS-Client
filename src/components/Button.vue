@@ -33,7 +33,7 @@ const emit = defineEmits(['click'])
   padding: var(--space-sm) var(--space-md);
 
   border-radius: var(--space-sm);
-
+  border: 1px solid transparent;
   cursor: pointer;
 }
 
@@ -72,6 +72,5 @@ const emit = defineEmits(['click'])
 .danger {
   color: var(--danger);
   background-color: var(--danger-bg);
-  border: 1px solid var(--danger);
 }
 </style>

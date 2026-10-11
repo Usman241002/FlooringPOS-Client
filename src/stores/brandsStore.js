@@ -18,7 +18,7 @@ const brandsStore = defineStore('brands', () => {
       brands.value = await response.json()
     } catch (err) {
       error.value = err.message
-      console.error('Failed to fetch products:', err)
+      console.error('Failed to fetch brands:', err)
     } finally {
       loading.value = false
     }

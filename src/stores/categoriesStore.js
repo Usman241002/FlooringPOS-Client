@@ -18,7 +18,7 @@ const categoriesStore = defineStore('categories', () => {
       categories.value = await response.json()
     } catch (err) {
       error.value = err.message
-      console.error('Failed to fetch products:', err)
+      console.error('Failed to fetch categories:', err)
     } finally {
       loading.value = false
     }
@@ -28,6 +28,7 @@ const categoriesStore = defineStore('categories', () => {
     categories,
     loading,
     error,
+    fetchCategories,
   }
 })
 
