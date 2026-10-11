@@ -1,6 +1,20 @@
 <script setup>
-import { reactive } from 'vue'
+import { computed, onMounted, reactive } from 'vue'
 import Button from '@/components/Button.vue'
+import { PlusOutlined } from '@ant-design/icons-vue'
+import Body from '@/components/Typography/Body.vue'
+import brandsStore from '@/stores/brandsStore.js'
+
+const useBrandsStore = brandsStore()
+
+onMounted(() => useBrandsStore.fetchBrands())
+
+const brandOptions = computed(() =>
+  useBrandsStore.brands.map((brand) => ({
+    label: brand.name,
+    value: brand.id,
+  })),
+)
 
 const form = reactive({
   brand: undefined,
@@ -28,19 +42,30 @@ function handleCancel() {
 <template>
   <div class="form-container">
     <div class="form-header">
-      <ATypographyTitle :level="4" class="title"> Add Product </ATypographyTitle>
-      <ATypographyText class="subtitle"> Enter the product details below. </ATypographyText>
+      <Body class="title">Add Product</Body>
+      <Body class="subtitle"> Enter the product details below. </Body>
     </div>
 
     <AForm layout="vertical" @finish="handleSubmit">
       <ARow :gutter="[16, 0]">
-        <ACol :sm="12" :xs="24">
-          <AFormItem label="Brand" name="brand">
-            <AInput v-model:value="form.brand" placeholder="Enter brand" />
+        <ACol :span="24">
+          <AFormItem
+            :rules="[{ required: true, message: 'Please select a brand' }]"
+            label="Brand"
+            name="brand"
+          >
+            <ASelect
+              v-model:value="form.brand"
+              :loading="useBrandsStore.loading"
+              :options="brandOptions"
+              allow-clear
+              option-filter-prop="label"
+              placeholder="Select brand"
+              show-search
+            />
           </AFormItem>
         </ACol>
-
-        <ACol :sm="12" :xs="24">
+        <ACol :span="24">
           <AFormItem
             :rules="[{ required: true, message: 'Please select a category' }]"
             label="Category"
@@ -52,8 +77,6 @@ function handleCancel() {
                 { label: 'Carpet', value: 'Carpet' },
                 { label: 'Laminate', value: 'Laminate' },
                 { label: 'Lino', value: 'Lino' },
-                { label: 'Underlay', value: 'Underlay' },
-                { label: 'Beading', value: 'Beading' },
               ]"
               placeholder="Select category"
             />
@@ -99,10 +122,10 @@ function handleCancel() {
         </ACol>
       </ARow>
 
-      <div class="button-section">
+      <AFlex class="button-section" vertical>
+        <Button variant="primary" @click="handleSubmit"><PlusOutlined /> Add Product </Button>
         <Button variant="danger" @click="handleCancel"> Cancel </Button>
-        <Button variant="primary" @click="handleSubmit"> Add Product </Button>
-      </div>
+      </AFlex>
     </AForm>
   </div>
 </template>
@@ -115,6 +138,7 @@ function handleCancel() {
   border: 1px solid var(--border);
   border-radius: 0.75rem;
   align-self: flex-start;
+  width: 40%;
 }
 
 .form-header {
@@ -125,10 +149,9 @@ function handleCancel() {
 }
 
 .title {
-  margin: 0;
   color: var(--text-primary);
   font: var(--body);
-  font-weight: 600;
+  font-weight: bold;
 }
 
 .subtitle {
@@ -138,7 +161,6 @@ function handleCancel() {
 
 .button-section {
   display: flex;
-  flex-direction: row;
   justify-content: flex-end;
   gap: 0.75rem;
   margin-top: 1rem;

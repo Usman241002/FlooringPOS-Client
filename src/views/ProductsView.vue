@@ -5,34 +5,22 @@ import Button from '@/components/Button.vue'
 import ProductsTable from '@/components/ProductsTable.vue'
 import Section from '@/components/Section.vue'
 import { computed, onMounted, ref } from 'vue'
-import API_URL from '@/services/api.js'
 import AddProductForm from '@/components/AddProductForm.vue'
 
-const products = ref([])
-const loading = ref(false)
-const error = ref(null)
+import productsStore from '@/stores/productsStore.js'
+import categoriesStore from '@/stores/categoriesStore.js'
+
+const useProductsStore = productsStore()
+const useCategoriesStore = categoriesStore()
+
 const searchInput = ref('')
 
 const selectedCategory = ref(undefined)
 
-const categories = computed(() => {
-  return [
-    ...new Map(
-      products.value
-        .map((product) => product.category)
-        .filter(Boolean)
-        .map((category) => [
-          typeof category === 'object' ? category.id : category,
-          typeof category === 'object' ? category.name : category,
-        ]),
-    ).entries(),
-  ].map(([value, label]) => ({ value, label }))
-})
-
 const filteredProducts = computed(() => {
   const query = searchInput.value.trim().toLowerCase()
 
-  return products.value.filter((product) => {
+  return useProductsStore.products.filter((product) => {
     const matchesName = product.name?.toLowerCase().includes(query)
 
     const categoryId =
@@ -45,32 +33,14 @@ const filteredProducts = computed(() => {
   })
 })
 
-async function fetchProducts() {
-  loading.value = true
-  error.value = null
-
-  try {
-    const response = await fetch(`${API_URL}/api/v1/products`)
-
-    if (!response.ok) {
-      throw new Error(`HTTP error: ${response.status}`)
-    }
-
-    products.value = await response.json()
-  } catch (err) {
-    error.value = err.message
-    console.error('Failed to fetch products:', err)
-  } finally {
-    loading.value = false
-  }
-}
-
-onMounted(fetchProducts)
+onMounted(() => {
+  useProductsStore.fetchProducts()
+})
 </script>
 <template>
   <Header>
     <template #title>Products</template>
-    <template #subtitle>{{ products.length }} active - 14 inactive</template>
+    <template #subtitle>{{ useProductsStore.products.length }} active - 14 inactive</template>
     <template #actions>
       <Button><PlusOutlined />Add Product</Button>
     </template>
@@ -92,7 +62,7 @@ onMounted(fetchProducts)
 
         <ASelect
           v-model:value="selectedCategory"
-          :options="categories"
+          :options="useCategoriesStore.categories"
           allow-clear
           class="category"
           placeholder="All categories"
