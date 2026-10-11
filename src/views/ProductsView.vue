@@ -1,12 +1,12 @@
 <script setup>
-import { PlusOutlined } from '@ant-design/icons-vue'
+import { PlusOutlined, SearchOutlined } from '@ant-design/icons-vue'
 import Header from '@/components/Header.vue'
 import Button from '@/components/Button.vue'
 import ProductsTable from '@/components/ProductsTable.vue'
 import Section from '@/components/Section.vue'
-import { SearchOutlined } from '@ant-design/icons-vue'
-import { ref, onMounted, computed } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import API_URL from '@/services/api.js'
+import AddProductForm from '@/components/AddProductForm.vue'
 
 const products = ref([])
 const loading = ref(false)
@@ -80,10 +80,10 @@ onMounted(fetchProducts)
     <AFlex class="products-container" vertical>
       <AFlex class="filters">
         <AInput
-          class="search"
           v-model:value="searchInput"
-          placeholder="Search products by name..."
           allow-clear
+          class="search"
+          placeholder="Search products by name..."
         >
           <template #prefix>
             <SearchOutlined />
@@ -91,15 +91,19 @@ onMounted(fetchProducts)
         </AInput>
 
         <ASelect
-          class="category"
           v-model:value="selectedCategory"
           :options="categories"
-          placeholder="All categories"
           allow-clear
+          class="category"
+          placeholder="All categories"
           style="width: 15rem"
         />
       </AFlex>
-      <ProductsTable :products="filteredProducts" />
+      <AFlex class="content">
+        <ProductsTable :products="filteredProducts" />
+
+        <AddProductForm />
+      </AFlex>
     </AFlex>
   </Section>
 </template>
@@ -109,6 +113,7 @@ onMounted(fetchProducts)
   gap: var(--space-lg);
 }
 
+.content,
 .filters {
   gap: var(--space-lg);
 }
