@@ -4,9 +4,9 @@ import Label from '@/components/Typography/Label.vue'
 import brandsStore from '@/stores/brandsStore.js'
 import categoriesStore from '@/stores/categoriesStore.js'
 import productsStore from '@/stores/productsStore.js'
-import { PlusOutlined } from '@ant-design/icons-vue'
+import { CloseOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons-vue'
 import { message } from 'ant-design-vue'
-import { computed, onMounted, reactive, watch } from 'vue'
+import { computed, onMounted, onUnmounted, reactive, watch } from 'vue'
 
 const { product } = defineProps({
   product: {
@@ -20,8 +20,13 @@ const useBrandsStore = brandsStore()
 const useCategoriesStore = categoriesStore()
 
 onMounted(() => {
+  window.addEventListener('keydown', handleKeyPress)
   useBrandsStore.fetchBrands()
   useCategoriesStore.fetchCategories()
+})
+
+onUnmounted(() => {
+  window.removeEventListener('keydown', handleKeyPress)
 })
 
 const form = reactive({
@@ -66,10 +71,10 @@ async function handleSubmit() {
   try {
     if (product?.id) {
       await useProductsStore.updateProduct(product.id, form)
-      await message.success('Product updated successfully')
+      message.success('Product updated successfully')
     } else {
       await useProductsStore.createProduct(form)
-      await message.success('Product added successfully')
+      message.success('Product added successfully')
     }
 
     emit('close')
@@ -91,6 +96,26 @@ function handleCancel() {
   emit('close')
 }
 
+function handleKeyPress(event) {
+  if (event.key === 'Escape') {
+    handleCancel()
+  }
+}
+
+function handleDelete(id) {
+  useProductsStore.deleteProduct(id)
+  message.success('Product deleted successfully')
+  Object.assign(form, {
+    brand: undefined,
+    name: '',
+    category: undefined,
+    sellingPriceM2: '',
+    costPriceM2: '',
+    isActive: true,
+  })
+  emit('close')
+}
+
 const rules = {
   brand: [{ required: true, message: 'Please select a brand' }],
   category: [{ required: true, message: 'Please select a category' }],
@@ -109,18 +134,23 @@ const emit = defineEmits(['close'])
 </script>
 
 <template>
-  <div class="form-container">
-    <div class="form-header">
-      <Body class="title">
-        {{ product ? 'Edit Product' : 'Add Product' }}
-      </Body>
+  <AFlex class="form-container" vertical>
+    <AFlex class="form-header" justify="space-between">
+      <AFlex class="form-texts" vertical>
+        <Body class="title">
+          {{ product ? 'Edit Product' : 'Add Product' }}
+        </Body>
 
-      <Body class="subtitle">
-        {{ product ? 'Update the product details below.' : 'Enter the product details below.' }}
-      </Body>
-    </div>
+        <Body class="subtitle">
+          {{ product ? 'Update the product details below.' : 'Enter the product details below.' }}
+        </Body>
+      </AFlex>
+      <AButton danger type="default" @click="handleCancel">
+        <CloseOutlined />
+      </AButton>
+    </AFlex>
 
-    <AForm :model="form" layout="vertical" @finish="handleSubmit">
+    <AForm :model="form" layout="vertical" @finish="handleSubmit" @keydown.esc="handleCancel">
       <ARow :gutter="[16, 0]">
         <ACol :span="24">
           <AFormItem :rules="rules.brand" label="Brand" name="brand">
@@ -200,10 +230,12 @@ const emit = defineEmits(['close'])
           <PlusOutlined v-if="!product" />
           {{ product ? 'Save Changes' : 'Add Product' }}
         </AButton>
-        <AButton danger type="default" @click="handleCancel"> Cancel</AButton>
+        <AButton danger type="default" @click="handleDelete(product.id)"
+          ><DeleteOutlined /> Delete</AButton
+        >
       </AFlex>
     </AForm>
-  </div>
+  </AFlex>
 </template>
 
 <style scoped>
@@ -226,7 +258,6 @@ const emit = defineEmits(['close'])
 
 .form-header {
   display: flex;
-  flex-direction: column;
   gap: 0.25rem;
   margin-bottom: 1.5rem;
 }
