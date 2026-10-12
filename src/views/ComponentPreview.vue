@@ -1,6 +1,5 @@
 <script setup>
 import Tag from '@/components/Tag.vue'
-import Button from '@/components/Button.vue'
 </script>
 
 <template>
@@ -11,13 +10,6 @@ import Button from '@/components/Button.vue'
       <Tag class="danger">Draft</Tag>
       <Tag class="warning">Overdue</Tag>
       <Tag class="inactive">Inactive</Tag>
-    </AFlex>
-
-    <AFlex gap="8">
-      <Button variant="primary">Primary Action</Button>
-      <Button variant="secondary">Secondary Action</Button>
-      <Button variant="outlined">Quiet Action</Button>
-      <Button variant="danger">Danger Action</Button>
     </AFlex>
   </AFlex>
 </template>

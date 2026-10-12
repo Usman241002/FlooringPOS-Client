@@ -1,7 +1,6 @@
 <script setup>
-import { PlusOutlined, SaveFilled } from '@ant-design/icons-vue'
 import Header from '@/components/Header.vue'
-import Button from '@/components/Button.vue'
+import { PlusOutlined, SaveFilled } from '@ant-design/icons-vue'
 
 const date = new Date()
 
@@ -16,8 +15,8 @@ const formattedDate = date.toLocaleDateString('en-GB', {
     <template #title>Quote Id</template>
     <template #subtitle>Created {{ formattedDate }}</template>
     <template #actions>
-      <Button><PlusOutlined />New Sale</Button>
-      <Button variant="secondary"><SaveFilled /> Save Draft</Button>
+      <AButton type="primary"><PlusOutlined />New Sale</AButton>
+      <AButton type="default"><SaveFilled /> Save Draft</AButton>
     </template>
   </Header>
 </template>

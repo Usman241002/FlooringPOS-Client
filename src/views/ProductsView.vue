@@ -1,14 +1,13 @@
 <script setup>
-import { PlusOutlined, SearchOutlined } from '@ant-design/icons-vue'
 import Header from '@/components/Header.vue'
-import Button from '@/components/Button.vue'
+import ProductForm from '@/components/ProductForm.vue'
 import ProductsTable from '@/components/ProductsTable.vue'
 import Section from '@/components/Section.vue'
-import { computed, onMounted, ref } from 'vue'
-import AddProductForm from '@/components/AddProductForm.vue'
+import categoriesStore from '@/stores/categoriesStore.js'
 
 import productsStore from '@/stores/productsStore.js'
-import categoriesStore from '@/stores/categoriesStore.js'
+import { PlusOutlined, SearchOutlined } from '@ant-design/icons-vue'
+import { computed, onMounted, ref } from 'vue'
 
 const useProductsStore = productsStore()
 const useCategoriesStore = categoriesStore()
@@ -16,6 +15,7 @@ const useCategoriesStore = categoriesStore()
 const searchInput = ref('')
 const selectedCategory = ref(undefined)
 const productFormVisibility = ref(false)
+const selectedProduct = ref(null)
 
 const filteredProducts = computed(() => {
   const query = searchInput.value.trim().toLowerCase()
@@ -44,13 +44,28 @@ onMounted(() => {
   useProductsStore.fetchProducts()
   useCategoriesStore.fetchCategories()
 })
+
+function openEditForm(product) {
+  selectedProduct.value = product
+  productFormVisibility.value = true
+}
+
+function openCreateForm() {
+  selectedProduct.value = null
+  productFormVisibility.value = true
+}
+
+function closeForm() {
+  productFormVisibility.value = false
+  selectedProduct.value = null
+}
 </script>
 <template>
   <Header>
     <template #title>Products</template>
     <template #subtitle>{{ useProductsStore.products.length }} active - 14 inactive</template>
     <template #actions>
-      <Button @click="() => (productFormVisibility = true)"><PlusOutlined />Add Product</Button>
+      <AButton type="primary" @click="openCreateForm()"><PlusOutlined />Add Product</AButton>
     </template>
   </Header>
 
@@ -78,9 +93,9 @@ onMounted(() => {
         />
       </AFlex>
       <AFlex class="content">
-        <ProductsTable :products="filteredProducts" />
+        <ProductsTable :products="filteredProducts" @edit="openEditForm" />
 
-        <AddProductForm v-if="productFormVisibility" @close="productFormVisibility = false" />
+        <ProductForm v-if="productFormVisibility" :product="selectedProduct" @close="closeForm" />
       </AFlex>
     </AFlex>
   </Section>

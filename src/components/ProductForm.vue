@@ -1,12 +1,21 @@
 <script setup>
-import { computed, onMounted, reactive } from 'vue'
-import Button from '@/components/Button.vue'
-import { PlusOutlined } from '@ant-design/icons-vue'
 import Body from '@/components/Typography/Body.vue'
+import Label from '@/components/Typography/Label.vue'
 import brandsStore from '@/stores/brandsStore.js'
 import categoriesStore from '@/stores/categoriesStore.js'
-import Label from '@/components/Typography/Label.vue'
+import productsStore from '@/stores/productsStore.js'
+import { PlusOutlined } from '@ant-design/icons-vue'
+import { message } from 'ant-design-vue'
+import { computed, onMounted, reactive, watch } from 'vue'
 
+const { product } = defineProps({
+  product: {
+    type: Object,
+    default: null,
+  },
+})
+
+const useProductsStore = productsStore()
 const useBrandsStore = brandsStore()
 const useCategoriesStore = categoriesStore()
 
@@ -15,7 +24,29 @@ onMounted(() => {
   useCategoriesStore.fetchCategories()
 })
 
-const emit = defineEmits(['close'])
+const form = reactive({
+  brand: undefined,
+  name: '',
+  category: undefined,
+  sellingPriceM2: '',
+  costPriceM2: '',
+  isActive: true,
+})
+
+watch(
+  () => product,
+  (product) => {
+    Object.assign(form, {
+      brand: product?.brand?.id ?? product?.brand ?? undefined,
+      name: product?.name ?? '',
+      category: product?.category?.id ?? product?.category ?? undefined,
+      sellingPriceM2: product?.sellingPriceM2 ?? '',
+      costPriceM2: product?.costPriceM2 ?? '',
+      isActive: product?.isActive ?? true,
+    })
+  },
+  { immediate: true },
+)
 
 const brandOptions = computed(() =>
   useBrandsStore.brands.map((brand) => ({
@@ -31,17 +62,20 @@ const categoryOptions = computed(() =>
   })),
 )
 
-const form = reactive({
-  brand: undefined,
-  name: '',
-  category: undefined,
-  sellingPriceM2: '',
-  costPriceM2: '',
-  isActive: true,
-})
+async function handleSubmit() {
+  try {
+    if (product?.id) {
+      await useProductsStore.updateProduct(product.id, form)
+      await message.success('Product updated successfully')
+    } else {
+      await useProductsStore.createProduct(form)
+      await message.success('Product added successfully')
+    }
 
-function handleSubmit() {
-  console.log('Product form:', form)
+    emit('close')
+  } catch (err) {
+    message.error(err.message || 'Failed to save product')
+  }
 }
 
 function handleCancel() {
@@ -70,13 +104,20 @@ const rules = {
   sellingPriceM2: [{ required: true, message: 'Enter a selling price' }],
   costPriceM2: [{ required: true, message: 'Enter a cost price' }],
 }
+
+const emit = defineEmits(['close'])
 </script>
 
 <template>
   <div class="form-container">
     <div class="form-header">
-      <Body class="title">Add Product</Body>
-      <Body class="subtitle"> Enter the product details below.</Body>
+      <Body class="title">
+        {{ product ? 'Edit Product' : 'Add Product' }}
+      </Body>
+
+      <Body class="subtitle">
+        {{ product ? 'Update the product details below.' : 'Enter the product details below.' }}
+      </Body>
     </div>
 
     <AForm :model="form" layout="vertical" @finish="handleSubmit">
@@ -155,11 +196,11 @@ const rules = {
       </ARow>
 
       <AFlex class="button-section" vertical>
-        <Button variant="primary" @click="handleSubmit">
-          <PlusOutlined />
-          Add Product
-        </Button>
-        <Button variant="danger" @click="handleCancel"> Cancel</Button>
+        <AButton :loading="useProductsStore.loading" html-type="submit" type="primary">
+          <PlusOutlined v-if="!product" />
+          {{ product ? 'Save Changes' : 'Add Product' }}
+        </AButton>
+        <AButton danger type="default" @click="handleCancel"> Cancel</AButton>
       </AFlex>
     </AForm>
   </div>

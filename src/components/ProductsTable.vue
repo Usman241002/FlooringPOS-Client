@@ -1,13 +1,18 @@
 <script setup>
-import { ref } from 'vue'
 import Tag from '@/components/Tag.vue'
+import productsStore from '@/stores/productsStore.js'
+import { ref } from 'vue'
 
 const { products } = defineProps({
   products: {
     type: Array,
-    required: true,
+    default: () => [],
   },
 })
+
+const useProductStore = productsStore()
+
+const emit = defineEmits(['edit'])
 
 const pagination = ref({
   current: 1,
@@ -50,17 +55,23 @@ function calculateMargin(record) {
 
   return ((sellingPrice - costPrice) / sellingPrice) * 100
 }
+
+function handleRowClick(record) {
+  emit('edit', record)
+}
 </script>
 
 <template>
   <div class="table-container">
-    <a-alert v-if="error" :message="`Failed to load products: ${error}`" show-icon type="error" />
-
-    <a-table
-      v-else
+    <ATable
       :columns="columns"
+      :custom-row="
+        (record) => ({
+          onClick: () => handleRowClick(record),
+        })
+      "
       :data-source="products"
-      :loading="loading"
+      :loading="useProductStore.loading"
       :locale="{ emptyText: 'No products found.' }"
       :pagination="pagination"
       row-key="id"
@@ -100,7 +111,7 @@ function calculateMargin(record) {
           <Tag v-else variant="inactive">Inactive</Tag>
         </template>
       </template>
-    </a-table>
+    </ATable>
   </div>
 </template>
 
@@ -136,6 +147,7 @@ function calculateMargin(record) {
 
 .table-container :deep(.ant-table-tbody > tr > td) {
   font: var(--body);
+  cursor: pointer;
 }
 
 .table-container :deep(.ant-table-tbody > tr:hover > td) {

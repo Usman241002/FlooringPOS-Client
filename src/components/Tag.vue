@@ -1,4 +1,6 @@
 <script setup>
+import Label from '@/components/Typography/Label.vue'
+
 defineProps({
   variant: {
     type: String,
@@ -19,6 +21,7 @@ defineProps({
   text-align: center;
   justify-content: center;
   align-items: center;
+  width: fit-content;
 }
 
 .primary {
