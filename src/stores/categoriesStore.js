@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import API_URL from '@/services/api.js'
+import API_BASE from '@/services/api.js'
 
 const categoriesStore = defineStore('categories', () => {
   const categories = ref([])
@@ -9,7 +9,7 @@ const categoriesStore = defineStore('categories', () => {
 
   async function fetchCategories() {
     try {
-      const response = await fetch(`${API_URL}/api/v1/categories`)
+      const response = await fetch(`${API_BASE}/categories`)
 
       if (!response.ok) {
         throw new Error(`HTTP error: ${response.status}`)

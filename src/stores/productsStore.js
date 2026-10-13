@@ -1,4 +1,4 @@
-import API_URL from '@/services/api.js'
+import API_BASE from '@/services/api.js'
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
@@ -10,7 +10,7 @@ const productsStore = defineStore('products', () => {
     loading.value = true
 
     try {
-      const response = await fetch(`${API_URL}/api/v1/products`)
+      const response = await fetch(`${API_BASE}/products`)
 
       if (!response.ok) {
         throw new Error(`HTTP error: ${response.status}`)
@@ -29,7 +29,7 @@ const productsStore = defineStore('products', () => {
     loading.value = true
     try {
       console.log(JSON.stringify(form))
-      const response = await fetch(`${API_URL}/api/v1/products`, {
+      const response = await fetch(`${API_BASE}/products`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -56,7 +56,7 @@ const productsStore = defineStore('products', () => {
     loading.value = true
 
     try {
-      const response = await fetch(`${API_URL}/api/v1/products/${productId}`, {
+      const response = await fetch(`${API_BASE}/products/${productId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -82,7 +82,7 @@ const productsStore = defineStore('products', () => {
     loading.value = true
 
     try {
-      const response = await fetch(`${API_URL}/api/v1/products/${productId}`, {
+      const response = await fetch(`${API_BASE}/products/${productId}`, {
         method: 'DELETE',
       })
 

@@ -12,13 +12,13 @@ import { computed, onMounted, ref } from 'vue'
 const useProductsStore = productsStore()
 const useCategoriesStore = categoriesStore()
 
-const searchInput = ref('')
+const searchQuery = ref('')
 const selectedCategory = ref(undefined)
 const productFormVisibility = ref(false)
 const selectedProduct = ref(null)
 
 const filteredProducts = computed(() => {
-  const query = searchInput.value.trim().toLowerCase()
+  const query = searchQuery.value.trim().toLowerCase()
 
   return useProductsStore.products.filter((product) => {
     const matchesName = product.name?.toLowerCase().includes(query)
@@ -73,7 +73,7 @@ function closeForm() {
     <AFlex class="products-container" vertical>
       <AFlex class="filters">
         <AInput
-          v-model:value="searchInput"
+          v-model:value="searchQuery"
           allow-clear
           class="search"
           placeholder="Search products by name..."
