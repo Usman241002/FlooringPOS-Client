@@ -7,6 +7,7 @@ import productsStore from '@/stores/productsStore.js'
 import { CloseOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons-vue'
 import { message } from 'ant-design-vue'
 import { computed, onMounted, onUnmounted, reactive, watch } from 'vue'
+import Card from '@/components/Card.vue'
 
 const { product } = defineProps({
   product: {
@@ -134,22 +135,23 @@ const emit = defineEmits(['close'])
 </script>
 
 <template>
-  <AFlex class="form-container" vertical>
-    <AFlex class="form-header" justify="space-between">
+  <Card :style="{ width: '40%' }">
+    <template #header>
       <AFlex class="form-texts" vertical>
         <Body class="title">
           {{ product ? 'Edit Product' : 'Add Product' }}
         </Body>
 
         <Body class="subtitle">
-          {{ product ? 'Update the product details below.' : 'Enter the product details below.' }}
+          {{
+            product ? `${product.brand.name} ${product.name}` : 'Enter the product details below.'
+          }}
         </Body>
       </AFlex>
       <AButton danger type="default" @click="handleCancel">
         <CloseOutlined />
       </AButton>
-    </AFlex>
-
+    </template>
     <AForm :model="form" layout="vertical" @finish="handleSubmit" @keydown.esc="handleCancel">
       <ARow :gutter="[16, 0]">
         <ACol :span="24">
@@ -235,7 +237,7 @@ const emit = defineEmits(['close'])
         >
       </AFlex>
     </AForm>
-  </AFlex>
+  </Card>
 </template>
 
 <style scoped>
@@ -244,22 +246,6 @@ const emit = defineEmits(['close'])
   background-color: var(--bg);
   align-items: center;
   border-radius: 0.5rem;
-}
-
-.form-container {
-  box-sizing: border-box;
-  padding: 1.5rem;
-  background-color: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 0.75rem;
-  align-self: flex-start;
-  width: 40%;
-}
-
-.form-header {
-  display: flex;
-  gap: 0.25rem;
-  margin-bottom: 1.5rem;
 }
 
 .title {

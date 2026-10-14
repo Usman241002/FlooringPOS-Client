@@ -1,57 +1,37 @@
 <script setup>
 import Header from '@/components/Header.vue'
-import { SearchOutlined, UserAddOutlined } from '@ant-design/icons-vue'
-import CustomerCard from '@/components/CustomerCard.vue'
+import { UserAddOutlined } from '@ant-design/icons-vue'
 import Section from '@/components/Section.vue'
-import customersStore from '@/stores/customersStore'
-import { computed, onMounted, ref, watch } from 'vue'
+
+import CustomerForm from '@/components/CustomerForm.vue'
+import CustomerList from '@/components/CustomerList.vue'
+
+import customersStore from '@/stores/customersStore.js'
+import { onMounted, ref } from 'vue'
 
 const useCustomerStore = customersStore()
 
-const searchQuery = ref('')
-const currentPage = ref(1)
-const pageSize = 5
+const customerFormVisibility = ref(false)
+const selectedCustomer = ref(null)
+
+function openEditForm(customer) {
+  selectedCustomer.value = customer
+  customerFormVisibility.value = true
+}
+
+function openCreateForm() {
+  selectedCustomer.value = null
+  customerFormVisibility.value = true
+}
+
+function closeForm() {
+  customerFormVisibility.value = false
+  selectedCustomer.value = null
+}
 
 onMounted(async () => {
   await useCustomerStore.fetchCustomers()
 })
-
-const filteredCustomers = computed(() => {
-  const query = searchQuery.value.trim().toLowerCase()
-
-  if (!query) {
-    return useCustomerStore.customers
-  }
-
-  return useCustomerStore.customers.filter((customer) => {
-    const fullName = `${customer.firstName} ${customer.lastName}`.toLowerCase()
-    const phone = (customer.phone ?? '').toLowerCase()
-
-    return fullName.includes(query) || phone.includes(query)
-  })
-})
-
-const totalPages = computed(() => Math.ceil(filteredCustomers.value.length / pageSize))
-
-const paginatedCustomers = computed(() => {
-  const start = (currentPage.value - 1) * pageSize
-
-  return filteredCustomers.value.slice(start, start + pageSize)
-})
-
-watch(searchQuery, () => {
-  currentPage.value = 1
-})
-
-watch(totalPages, (pages) => {
-  if (currentPage.value > pages) {
-    currentPage.value = Math.max(1, pages)
-  }
-})
-
-function changePage(page) {
-  currentPage.value = page
-}
 </script>
 
 <template>
@@ -59,7 +39,7 @@ function changePage(page) {
     <template #title>Customers</template>
     <template #subtitle> {{ useCustomerStore.customers.length }} customer records </template>
     <template #actions>
-      <AButton type="primary">
+      <AButton type="primary" @click="openCreateForm">
         <UserAddOutlined />
         New Customer
       </AButton>
@@ -67,63 +47,15 @@ function changePage(page) {
   </Header>
 
   <Section>
-    <AFlex class="customer-lookup card" vertical>
-      <AInput
-        v-model:value="searchQuery"
-        allow-clear
-        class="search"
-        placeholder="Search by name or phone number..."
-      >
-        <template #prefix>
-          <SearchOutlined />
-        </template>
-      </AInput>
-
-      <AFlex class="customer-list" vertical>
-        <CustomerCard
-          v-for="customer in paginatedCustomers"
-          :key="customer.id"
-          :customer="customer"
-        />
-
-        <div v-if="filteredCustomers.length === 0" class="empty-state">No customers found.</div>
-      </AFlex>
-
-      <APagination
-        v-if="filteredCustomers.length > pageSize"
-        :current="currentPage"
-        :page-size="pageSize"
-        :show-size-changer="false"
-        :style="{ display: 'flex', justifyContent: 'end' }"
-        :total="filteredCustomers.length"
-        @change="changePage"
-      />
+    <AFlex class="content">
+      <CustomerList :customers="useCustomerStore.customers" @edit="openEditForm" />
+      <CustomerForm v-if="customerFormVisibility" :customer="selectedCustomer" @close="closeForm" />
     </AFlex>
   </Section>
 </template>
 
 <style scoped>
-.customer-lookup {
-  width: 40%;
-  gap: 1rem;
-}
-
-.customer-list {
-  gap: 0.5rem;
-}
-
-.empty-state {
-  padding: 1.5rem;
-  text-align: center;
-  color: #888;
-}
-
-.search {
-  display: flex;
-  gap: var(--space-sm);
-  padding: var(--space-sm);
-  width: 100%;
-  font: var(--body);
-  color: var(--text-secondary);
+.content {
+  gap: var(--space-lg);
 }
 </style>
