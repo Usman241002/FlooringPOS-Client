@@ -48,7 +48,11 @@ onMounted(async () => {
 
   <Section>
     <AFlex class="content">
-      <CustomerList :customers="useCustomerStore.customers" @edit="openEditForm" />
+      <CustomerList
+        :customers="useCustomerStore.customers"
+        :selectedCustomer="selectedCustomer"
+        @edit="openEditForm"
+      />
       <CustomerForm v-if="customerFormVisibility" :customer="selectedCustomer" @close="closeForm" />
     </AFlex>
   </Section>

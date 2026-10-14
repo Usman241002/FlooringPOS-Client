@@ -3,13 +3,18 @@ import { SearchOutlined } from '@ant-design/icons-vue'
 import { computed, ref, watch } from 'vue'
 import CustomerCard from '@/components/CustomerCard.vue'
 
-const { customers } = defineProps({
+const { customers, selectedCustomer } = defineProps({
   customers: {
-    firstName: String,
-    lastName: String,
-    phone: String,
+    type: Array,
+    default: () => [],
+  },
+  selectedCustomer: {
+    type: Object,
+    default: null,
   },
 })
+
+const emit = defineEmits(['edit'])
 
 const searchQuery = ref('')
 const currentPage = ref(1)
@@ -51,6 +56,10 @@ watch(totalPages, (pages) => {
 function changePage(page) {
   currentPage.value = page
 }
+
+function editCustomer(customer) {
+  emit('edit', customer)
+}
 </script>
 <template>
   <AFlex class="customer-lookup card" vertical>
@@ -69,9 +78,10 @@ function changePage(page) {
       <CustomerCard
         v-for="customer in paginatedCustomers"
         :key="customer.id"
+        :active="customer.id === selectedCustomer?.id"
         :customer="customer"
+        @click="editCustomer(customer)"
       />
-
       <div v-if="filteredCustomers.length === 0" class="empty-state">No customers found.</div>
     </AFlex>
 

@@ -103,8 +103,8 @@ function handleKeyPress(event) {
   }
 }
 
-function handleDelete(id) {
-  useProductsStore.deleteProduct(id)
+async function handleDelete(id) {
+  await useProductsStore.deleteProduct(id)
   message.success('Product deleted successfully')
   Object.assign(form, {
     brand: undefined,
@@ -232,7 +232,7 @@ const emit = defineEmits(['close'])
           <PlusOutlined v-if="!product" />
           {{ product ? 'Save Changes' : 'Add Product' }}
         </AButton>
-        <AButton danger type="default" @click="handleDelete(product.id)"
+        <AButton v-if="product" danger type="default" @click="handleDelete(product.id)"
           ><DeleteOutlined /> Delete</AButton
         >
       </AFlex>

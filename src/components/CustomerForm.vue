@@ -1,10 +1,20 @@
 <script setup>
 import Card from '@/components/Card.vue'
 import Body from '@/components/Typography/Body.vue'
-import { CloseOutlined } from '@ant-design/icons-vue'
-import { reactive } from 'vue'
+import { CloseOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons-vue'
+import { onMounted, onUnmounted, reactive, watch } from 'vue'
+import customersStore from '@/stores/customersStore.js'
+import { message } from 'ant-design-vue'
+
+const { customer } = defineProps({
+  customer: {
+    type: Object,
+    default: null,
+  },
+})
 
 const emit = defineEmits(['close'])
+const useCustomersStore = customersStore()
 
 const form = reactive({
   firstName: '',
@@ -12,7 +22,52 @@ const form = reactive({
   phone: '',
 })
 
-async function handleSubmit() {}
+onMounted(() => {
+  window.addEventListener('keydown', handleKeyPress)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('keydown', handleKeyPress)
+})
+
+watch(
+  () => customer,
+  (customer) => {
+    Object.assign(form, {
+      firstName: customer?.firstName ?? '',
+      lastName: customer?.lastName ?? '',
+      phone: customer?.phone ?? '',
+    })
+  },
+  { immediate: true },
+)
+
+async function handleSubmit() {
+  try {
+    if (customer?.id) {
+      await useCustomersStore.updateCustomer(customer.id, form)
+      message.success('Customer updated successfully')
+    } else {
+      await useCustomersStore.createCustomer(form)
+      message.success('Customer added successfully')
+    }
+
+    emit('close')
+  } catch (err) {
+    message.error(err.message || 'Failed to save customer')
+  }
+}
+
+async function handleDelete(id) {
+  await useCustomersStore.deleteCustomer(id)
+  message.success('Customer deleted successfully')
+  Object.assign(form, {
+    firstName: '',
+    lastName: '',
+    phone: '',
+  })
+  emit('close')
+}
 
 function handleCancel() {
   Object.assign(form, {
@@ -22,6 +77,12 @@ function handleCancel() {
   })
 
   emit('close')
+}
+
+function handleKeyPress(event) {
+  if (event.key === 'Escape') {
+    handleCancel()
+  }
 }
 </script>
 
@@ -50,12 +111,12 @@ function handleCancel() {
       <ARow :gutter="[16, 0]">
         <ACol :span="12">
           <AFormItem label="First name" name="firstName">
-            <AInput v-model:value="form.firstName" placeholder="Enter product name" />
+            <AInput v-model:value="form.firstName" placeholder="Enter first name" />
           </AFormItem>
         </ACol>
         <ACol :span="12">
           <AFormItem label="Last name" name="lastName">
-            <AInput v-model:value="form.lastName" placeholder="Enter product name" />
+            <AInput v-model:value="form.lastName" placeholder="Enter last name" />
           </AFormItem>
         </ACol>
         <ACol :span="24">
@@ -64,6 +125,15 @@ function handleCancel() {
           </AFormItem>
         </ACol>
       </ARow>
+      <AFlex class="button-section" vertical>
+        <AButton :loading="useCustomersStore.loading" html-type="submit" type="primary">
+          <PlusOutlined v-if="!customer" />
+          {{ customer ? 'Save Changes' : 'Add Customer' }}
+        </AButton>
+        <AButton v-if="customer" danger type="default" @click="handleDelete(customer.id)"
+          ><DeleteOutlined /> Delete</AButton
+        >
+      </AFlex>
     </AForm>
   </Card>
 </template>
@@ -78,5 +148,13 @@ function handleCancel() {
 .subtitle {
   color: var(--text-secondary);
   font: var(--body);
+}
+
+.button-section {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  width: 100%;
 }
 </style>
