@@ -13,13 +13,16 @@
 </template>
 
 <style scoped>
+.card {
+  height: fit-content;
+  align-self: flex-start;
+}
+
 .header {
   display: flex;
   gap: 0.25rem;
   margin-bottom: 1rem;
   justify-content: space-between;
-}
-
-.body {
+  align-items: center;
 }
 </style>

@@ -22,7 +22,7 @@ function handleClick() {
 </script>
 
 <template>
-  <div :class="['customer-card-container', 'card', { active }]" @click="$emit('click')">
+  <div :class="['customer-card-container', 'card', { active }]" @click="handleClick">
     <AFlex class="left">
       <AAvatar :class="['avatar', active ? 'active-avatar' : '']">
         {{ customer.firstName?.[0] }}{{ customer.lastName?.[0] }}

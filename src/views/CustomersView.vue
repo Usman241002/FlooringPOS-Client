@@ -8,36 +8,36 @@ import CustomerList from '@/components/CustomerList.vue'
 
 import customersStore from '@/stores/customersStore.js'
 import { onMounted, ref } from 'vue'
+import AddressList from '@/components/AddressList.vue'
 
-const useCustomerStore = customersStore()
+const useCustomersStore = customersStore()
 
 const customerFormVisibility = ref(false)
-const selectedCustomer = ref(null)
 
 function openEditForm(customer) {
-  selectedCustomer.value = customer
+  useCustomersStore.customer = customer
   customerFormVisibility.value = true
 }
 
 function openCreateForm() {
-  selectedCustomer.value = null
+  useCustomersStore.customer = null
   customerFormVisibility.value = true
 }
 
 function closeForm() {
+  useCustomersStore.customer = null
   customerFormVisibility.value = false
-  selectedCustomer.value = null
 }
 
 onMounted(async () => {
-  await useCustomerStore.fetchCustomers()
+  await useCustomersStore.fetchCustomers()
 })
 </script>
 
 <template>
   <Header>
     <template #title>Customers</template>
-    <template #subtitle> {{ useCustomerStore.customers.length }} customer records </template>
+    <template #subtitle> {{ useCustomersStore.customers.length }} customer records </template>
     <template #actions>
       <AButton type="primary" @click="openCreateForm">
         <UserAddOutlined />
@@ -48,18 +48,19 @@ onMounted(async () => {
 
   <Section>
     <AFlex class="content">
-      <CustomerList
-        :customers="useCustomerStore.customers"
-        :selectedCustomer="selectedCustomer"
-        @edit="openEditForm"
-      />
-      <CustomerForm v-if="customerFormVisibility" :customer="selectedCustomer" @close="closeForm" />
+      <CustomerList :customers="useCustomersStore.customers" @edit="openEditForm" />
+      <AFlex class="right" vertical>
+        <CustomerForm v-if="customerFormVisibility" @close="closeForm" />
+
+        <AddressList v-if="customerFormVisibility && useCustomersStore.customer" />
+      </AFlex>
     </AFlex>
   </Section>
 </template>
 
 <style scoped>
-.content {
+.content,
+.right {
   gap: var(--space-lg);
 }
 </style>

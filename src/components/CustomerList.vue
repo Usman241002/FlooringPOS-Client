@@ -2,17 +2,16 @@
 import { SearchOutlined } from '@ant-design/icons-vue'
 import { computed, ref, watch } from 'vue'
 import CustomerCard from '@/components/CustomerCard.vue'
+import customersStore from '@/stores/customersStore.js'
 
-const { customers, selectedCustomer } = defineProps({
+const { customers } = defineProps({
   customers: {
     type: Array,
     default: () => [],
   },
-  selectedCustomer: {
-    type: Object,
-    default: null,
-  },
 })
+
+const useCustomersStore = customersStore()
 
 const emit = defineEmits(['edit'])
 
@@ -78,7 +77,7 @@ function editCustomer(customer) {
       <CustomerCard
         v-for="customer in paginatedCustomers"
         :key="customer.id"
-        :active="customer.id === selectedCustomer?.id"
+        :active="customer.id === useCustomersStore.customer?.id"
         :customer="customer"
         @click="editCustomer(customer)"
       />
@@ -101,6 +100,8 @@ function editCustomer(customer) {
 .customer-lookup {
   min-width: 50%;
   gap: 1rem;
+  height: fit-content;
+  align-self: flex-start;
 }
 
 .customer-list {

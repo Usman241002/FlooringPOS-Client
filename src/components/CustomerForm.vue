@@ -6,13 +6,6 @@ import { onMounted, onUnmounted, reactive, watch } from 'vue'
 import customersStore from '@/stores/customersStore.js'
 import { message } from 'ant-design-vue'
 
-const { customer } = defineProps({
-  customer: {
-    type: Object,
-    default: null,
-  },
-})
-
 const emit = defineEmits(['close'])
 const useCustomersStore = customersStore()
 
@@ -31,7 +24,7 @@ onUnmounted(() => {
 })
 
 watch(
-  () => customer,
+  () => useCustomersStore.customer,
   (customer) => {
     Object.assign(form, {
       firstName: customer?.firstName ?? '',
@@ -44,8 +37,8 @@ watch(
 
 async function handleSubmit() {
   try {
-    if (customer?.id) {
-      await useCustomersStore.updateCustomer(customer.id, form)
+    if (useCustomersStore.customer?.id) {
+      await useCustomersStore.updateCustomer(useCustomersStore.customer.id, form)
       message.success('Customer updated successfully')
     } else {
       await useCustomersStore.createCustomer(form)
@@ -96,8 +89,8 @@ function handleKeyPress(event) {
 
         <Body class="subtitle">
           {{
-            customer
-              ? `${customer.firstName} ${customer.lastName}`
+            useCustomersStore.customer
+              ? `${useCustomersStore.customer.firstName} ${useCustomersStore.customer.lastName}`
               : 'Enter the customer details below.'
           }}
         </Body>
@@ -107,7 +100,13 @@ function handleKeyPress(event) {
       </AButton>
     </template>
 
-    <AForm :model="form" layout="vertical" @finish="handleSubmit" @keydown.esc="handleCancel">
+    <AForm
+      :model="form"
+      class="customer-form"
+      layout="vertical"
+      @finish="handleSubmit"
+      @keydown.esc="handleCancel"
+    >
       <ARow :gutter="[16, 0]">
         <ACol :span="12">
           <AFormItem label="First name" name="firstName">
@@ -126,11 +125,22 @@ function handleKeyPress(event) {
         </ACol>
       </ARow>
       <AFlex class="button-section" vertical>
-        <AButton :loading="useCustomersStore.loading" html-type="submit" type="primary">
-          <PlusOutlined v-if="!customer" />
-          {{ customer ? 'Save Changes' : 'Add Customer' }}
+        <AButton
+          :disabled="useCustomersStore.loading"
+          :loading="useCustomersStore.loading"
+          html-type="submit"
+          type="primary"
+        >
+          <PlusOutlined v-if="!useCustomersStore.customer" />
+          {{ useCustomersStore.customer ? 'Save Changes' : 'Add Customer' }}
         </AButton>
-        <AButton v-if="customer" danger type="default" @click="handleDelete(customer.id)"
+        <AButton
+          v-if="useCustomersStore.customer"
+          :disabled="useCustomersStore.loading"
+          :loading="useCustomersStore.loading"
+          danger
+          type="default"
+          @click="handleDelete(useCustomersStore.customer.id)"
           ><DeleteOutlined /> Delete</AButton
         >
       </AFlex>

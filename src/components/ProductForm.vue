@@ -228,11 +228,22 @@ const emit = defineEmits(['close'])
       </ARow>
 
       <AFlex class="button-section" vertical>
-        <AButton :loading="useProductsStore.loading" html-type="submit" type="primary">
+        <AButton
+          :disabled="useProductsStore.loading"
+          :loading="useProductsStore.loading"
+          html-type="submit"
+          type="primary"
+        >
           <PlusOutlined v-if="!product" />
           {{ product ? 'Save Changes' : 'Add Product' }}
         </AButton>
-        <AButton v-if="product" danger type="default" @click="handleDelete(product.id)"
+        <AButton
+          v-if="product"
+          :disabled="useProductsStore.loading"
+          :loading="useProductsStore.loading"
+          danger
+          type="default"
+          @click="handleDelete(product.id)"
           ><DeleteOutlined /> Delete</AButton
         >
       </AFlex>

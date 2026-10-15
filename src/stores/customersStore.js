@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import API_BASE from '@/services/api.js'
 
 const customersStore = defineStore('customers', () => {
+  const customer = ref(null)
   const customers = ref([])
   const loading = ref(false)
 
@@ -17,6 +18,24 @@ const customersStore = defineStore('customers', () => {
       }
 
       customers.value = await response.json()
+    } catch (err) {
+      console.error(err)
+      throw err
+    } finally {
+      loading.value = false
+    }
+  }
+
+  async function fetchCustomer(id) {
+    loading.value = true
+    try {
+      const response = await fetch(`${API_BASE}/customers/${id}`)
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+
+      customer.value = await response.json()
     } catch (err) {
       console.error(err)
       throw err
@@ -98,7 +117,15 @@ const customersStore = defineStore('customers', () => {
     }
   }
 
-  return { customers, loading, fetchCustomers, createCustomer, updateCustomer, deleteCustomer }
+  return {
+    customer,
+    customers,
+    loading,
+    fetchCustomers,
+    createCustomer,
+    updateCustomer,
+    deleteCustomer,
+  }
 })
 
 export default customersStore
