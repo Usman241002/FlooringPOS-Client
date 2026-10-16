@@ -1,7 +1,7 @@
 <script setup>
 import Header from '@/components/Header.vue'
-import ProductForm from '@/components/ProductForm.vue'
-import ProductsTable from '@/components/ProductsTable.vue'
+import ProductForm from '@/components/forms/ProductForm.vue'
+import ProductsTable from '@/components/tables/ProductsTable.vue'
 import Section from '@/components/Section.vue'
 import categoriesStore from '@/stores/categoriesStore.js'
 

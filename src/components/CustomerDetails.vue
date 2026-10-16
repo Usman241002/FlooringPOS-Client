@@ -1,8 +1,8 @@
 <script setup>
 import Card from '@/components/Card.vue'
-import Label from '@/components/Typography/Label.vue'
-import Body from '@/components/Typography/Body.vue'
-import AddressCard from '@/components/AddressCard.vue'
+import Label from '@/components/typography/Label.vue'
+import Body from '@/components/typography/Body.vue'
+import AddressCard from '@/components/cards/AddressCard.vue'
 
 const { customer } = defineProps({
   customer: {

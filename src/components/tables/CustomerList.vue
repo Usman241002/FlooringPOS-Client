@@ -1,7 +1,7 @@
 <script setup>
 import { SearchOutlined } from '@ant-design/icons-vue'
 import { computed, ref, watch } from 'vue'
-import CustomerCard from '@/components/CustomerCard.vue'
+import CustomerCard from '@/components/cards/CustomerCard.vue'
 import customersStore from '@/stores/customersStore.js'
 
 const { customers } = defineProps({

@@ -1,5 +1,5 @@
 <script setup>
-import Label from '@/components/Typography/Label.vue'
+import Label from '@/components/typography/Label.vue'
 
 defineProps({
   variant: {

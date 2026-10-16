@@ -1,6 +1,6 @@
 <script setup>
 import Card from '@/components/Card.vue'
-import Body from '@/components/Typography/Body.vue'
+import Body from '@/components/typography/Body.vue'
 import { CloseOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons-vue'
 import { onMounted, onUnmounted, reactive, watch } from 'vue'
 import customersStore from '@/stores/customersStore.js'

@@ -1,7 +1,7 @@
 <script setup>
 import Card from '@/components/Card.vue'
-import Body from '@/components/Typography/Body.vue'
-import AddressCard from '@/components/AddressCard.vue'
+import Body from '@/components/typography/Body.vue'
+import AddressCard from '@/components/cards/AddressCard.vue'
 import { EditOutlined } from '@ant-design/icons-vue'
 
 import customersStore from '@/stores/customersStore.js'

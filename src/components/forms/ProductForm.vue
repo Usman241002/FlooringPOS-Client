@@ -1,6 +1,6 @@
 <script setup>
-import Body from '@/components/Typography/Body.vue'
-import Label from '@/components/Typography/Label.vue'
+import Body from '@/components/typography/Body.vue'
+import Label from '@/components/typography/Label.vue'
 import brandsStore from '@/stores/brandsStore.js'
 import categoriesStore from '@/stores/categoriesStore.js'
 import productsStore from '@/stores/productsStore.js'

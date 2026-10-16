@@ -3,12 +3,12 @@ import Header from '@/components/Header.vue'
 import { UserAddOutlined } from '@ant-design/icons-vue'
 import Section from '@/components/Section.vue'
 
-import CustomerForm from '@/components/CustomerForm.vue'
-import CustomerList from '@/components/CustomerList.vue'
+import CustomerForm from '@/components/forms/CustomerForm.vue'
+import CustomerList from '@/components/tables/CustomerList.vue'
 
 import customersStore from '@/stores/customersStore.js'
 import { onMounted, ref } from 'vue'
-import AddressList from '@/components/AddressList.vue'
+import AddressList from '@/components/tables/AddressList.vue'
 
 const useCustomersStore = customersStore()
 

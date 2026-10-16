@@ -1,6 +1,6 @@
 <script setup>
-import Body from '@/components/Typography/Body.vue'
-import Label from '@/components/Typography/Label.vue'
+import Body from '@/components/typography/Body.vue'
+import Label from '@/components/typography/Label.vue'
 import Tag from '@/components/Tag.vue'
 
 const { address } = defineProps({
