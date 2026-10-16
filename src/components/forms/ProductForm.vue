@@ -148,7 +148,7 @@ const emit = defineEmits(['close'])
           }}
         </Body>
       </AFlex>
-      <AButton danger type="default" @click="handleCancel">
+      <AButton type="text" @click="handleCancel">
         <CloseOutlined />
       </AButton>
     </template>
@@ -227,16 +227,7 @@ const emit = defineEmits(['close'])
         </ACol>
       </ARow>
 
-      <AFlex class="button-section" vertical>
-        <AButton
-          :disabled="useProductsStore.loading"
-          :loading="useProductsStore.loading"
-          html-type="submit"
-          type="primary"
-        >
-          <PlusOutlined v-if="!product" />
-          {{ product ? 'Save Changes' : 'Add Product' }}
-        </AButton>
+      <AFlex class="button-section">
         <AButton
           v-if="product"
           :disabled="useProductsStore.loading"
@@ -246,6 +237,15 @@ const emit = defineEmits(['close'])
           @click="handleDelete(product.id)"
           ><DeleteOutlined /> Delete</AButton
         >
+        <AButton
+          :disabled="useProductsStore.loading"
+          :loading="useProductsStore.loading"
+          html-type="submit"
+          type="primary"
+        >
+          <PlusOutlined v-if="!product" />
+          {{ product ? 'Save Changes' : 'Add Product' }}
+        </AButton>
       </AFlex>
     </AForm>
   </Card>
@@ -272,6 +272,7 @@ const emit = defineEmits(['close'])
 
 .button-section {
   display: flex;
+
   justify-content: flex-end;
   gap: 0.75rem;
   margin-top: 1rem;

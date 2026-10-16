@@ -21,7 +21,7 @@ const useCustomersStore = customersStore()
         </Body>
       </AFlex>
       <RouterLink :to="'/customers/' + useCustomersStore.customer.id">
-        <AButton type="primary"><EditOutlined />Edit</AButton>
+        <AButton type="text"><EditOutlined />Edit</AButton>
       </RouterLink>
     </template>
     <AFlex class="addresses-container" vertical>

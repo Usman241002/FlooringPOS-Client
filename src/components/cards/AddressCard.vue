@@ -11,7 +11,7 @@ const { address } = defineProps({
 })
 </script>
 <template>
-  <AFlex class="address-container" justify="space-between">
+  <div class="address-container">
     <AFlex class="left" vertical>
       <Body class="title">{{
         address.addressLine1 + (address.addressLine2 ? ', ' + address.addressLine2 : '')
@@ -20,17 +20,23 @@ const { address } = defineProps({
     </AFlex>
 
     <Tag>0 rooms</Tag>
-  </AFlex>
+  </div>
 </template>
 
 <style scoped>
 .address-container {
+  display: flex;
+  justify-content: space-between;
   background: var(--bg);
   border-radius: 0.5rem;
   border: 1px solid transparent;
   width: 100%;
   padding: var(--space-lg);
   align-items: center;
+}
+
+.address-container:hover {
+  cursor: pointer;
 }
 
 .title {

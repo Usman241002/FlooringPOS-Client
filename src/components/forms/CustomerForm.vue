@@ -95,7 +95,7 @@ function handleKeyPress(event) {
           }}
         </Body>
       </AFlex>
-      <AButton danger type="default" @click="handleCancel">
+      <AButton type="text" @click="handleCancel">
         <CloseOutlined />
       </AButton>
     </template>
@@ -124,16 +124,7 @@ function handleKeyPress(event) {
           </AFormItem>
         </ACol>
       </ARow>
-      <AFlex class="button-section" vertical>
-        <AButton
-          :disabled="useCustomersStore.loading"
-          :loading="useCustomersStore.loading"
-          html-type="submit"
-          type="primary"
-        >
-          <PlusOutlined v-if="!useCustomersStore.customer" />
-          {{ useCustomersStore.customer ? 'Save Changes' : 'Add Customer' }}
-        </AButton>
+      <AFlex class="button-section">
         <AButton
           v-if="useCustomersStore.customer"
           :disabled="useCustomersStore.loading"
@@ -143,6 +134,15 @@ function handleKeyPress(event) {
           @click="handleDelete(useCustomersStore.customer.id)"
           ><DeleteOutlined /> Delete</AButton
         >
+        <AButton
+          :disabled="useCustomersStore.loading"
+          :loading="useCustomersStore.loading"
+          html-type="submit"
+          type="primary"
+        >
+          <PlusOutlined v-if="!useCustomersStore.customer" />
+          {{ useCustomersStore.customer ? 'Save Changes' : 'Add Customer' }}
+        </AButton>
       </AFlex>
     </AForm>
   </Card>
@@ -162,6 +162,7 @@ function handleKeyPress(event) {
 
 .button-section {
   display: flex;
+  flex-direction: row;
   justify-content: flex-end;
   gap: 0.75rem;
   margin-top: 1rem;

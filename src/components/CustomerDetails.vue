@@ -10,6 +10,12 @@ const { customer } = defineProps({
     required: true,
   },
 })
+
+const emit = defineEmits(['edit'])
+
+function editAddress(address) {
+  emit('edit', address)
+}
 </script>
 <template>
   <Card class="customer-details-container">
@@ -33,7 +39,12 @@ const { customer } = defineProps({
       </AFlex>
 
       <AFlex class="addresses-container" vertical>
-        <AddressCard v-for="address in customer.addresses" :key="address.id" :address="address" />
+        <AddressCard
+          v-for="address in customer.addresses"
+          :key="address.id"
+          :address="address"
+          @click="editAddress(address)"
+        />
       </AFlex>
     </AFlex>
   </Card>

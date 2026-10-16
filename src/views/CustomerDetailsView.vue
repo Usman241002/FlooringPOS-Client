@@ -4,13 +4,32 @@ import Section from '@/components/Section.vue'
 import CustomerDetails from '@/components/CustomerDetails.vue'
 
 import customersStore from '@/stores/customersStore.js'
-import { onMounted } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { PlusOutlined } from '@ant-design/icons-vue'
+import AddressForm from '@/components/forms/AddressForm.vue'
 
 const useCustomersStore = customersStore()
 const route = useRoute()
 const customerId = route.params.id
+
+const addressFormVisibility = ref(false)
+const selectedAddress = ref(null)
+
+function openEditForm(address) {
+  addressFormVisibility.value = true
+  selectedAddress.value = address
+}
+
+function openCreateForm() {
+  addressFormVisibility.value = true
+  selectedAddress.value = null
+}
+
+function closeForm() {
+  addressFormVisibility.value = false
+  selectedAddress.value = null
+}
 
 onMounted(async () => {
   await useCustomersStore.fetchCustomer(customerId)
@@ -32,19 +51,15 @@ onMounted(async () => {
   </Header>
 
   <Section>
-    <ARow :gutter="[16, 16]" class="customer-details-container">
-      <ACol span="8">
-        <CustomerDetails
-          v-if="!useCustomersStore.loading && useCustomersStore.customer"
-          :customer="useCustomersStore.customer"
-        />
+    <ARow :gutter="16">
+      <ACol v-if="!useCustomersStore.loading && useCustomersStore.customer" span="8">
+        <CustomerDetails :customer="useCustomersStore.customer" @edit="openEditForm" />
+      </ACol>
+      <ACol v-if="addressFormVisibility" span="16">
+        <AddressForm :address="selectedAddress" @close="closeForm" />
       </ACol>
     </ARow>
   </Section>
 </template>
 
-<style scoped>
-.customer-details-container {
-  gap: var(--space-lg);
-}
-</style>
+<style scoped></style>
