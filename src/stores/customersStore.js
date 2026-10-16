@@ -121,6 +121,7 @@ const customersStore = defineStore('customers', () => {
     customer,
     customers,
     loading,
+    fetchCustomer,
     fetchCustomers,
     createCustomer,
     updateCustomer,

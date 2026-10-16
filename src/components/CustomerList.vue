@@ -99,13 +99,13 @@ function editCustomer(customer) {
 <style scoped>
 .customer-lookup {
   min-width: 50%;
-  gap: 1rem;
+  gap: var(--space-lg);
   height: fit-content;
   align-self: flex-start;
 }
 
 .customer-list {
-  gap: 0.5rem;
+  gap: var(--space-sm);
 }
 
 .empty-state {
