@@ -32,11 +32,19 @@ onMounted(async () => {
   </Header>
 
   <Section>
-    <AFlex>
-      <CustomerDetails
-        v-if="!useCustomersStore.loading && useCustomersStore.customer"
-        :customer="useCustomersStore.customer"
-      />
-    </AFlex>
+    <ARow :gutter="[16, 16]" class="customer-details-container">
+      <ACol span="8">
+        <CustomerDetails
+          v-if="!useCustomersStore.loading && useCustomersStore.customer"
+          :customer="useCustomersStore.customer"
+        />
+      </ACol>
+    </ARow>
   </Section>
 </template>
+
+<style scoped>
+.customer-details-container {
+  gap: var(--space-lg);
+}
+</style>

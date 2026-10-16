@@ -47,20 +47,30 @@ onMounted(async () => {
   </Header>
 
   <Section>
-    <AFlex class="content">
-      <CustomerList :customers="useCustomersStore.customers" @edit="openEditForm" />
-      <AFlex class="right" vertical>
-        <CustomerForm v-if="customerFormVisibility" @close="closeForm" />
+    <ARow :gutter="[16, 16]" class="customers-layout">
+      <ACol :span="12">
+        <CustomerList :customers="useCustomersStore.customers" @edit="openEditForm" />
+      </ACol>
 
-        <AddressList v-if="customerFormVisibility && useCustomersStore.customer" />
-      </AFlex>
-    </AFlex>
+      <ACol v-if="customerFormVisibility" :span="12">
+        <AFlex class="right" vertical>
+          <CustomerForm @close="closeForm" />
+
+          <AddressList v-if="useCustomersStore.customer" />
+        </AFlex>
+      </ACol>
+    </ARow>
   </Section>
 </template>
 
 <style scoped>
-.content,
+.customers-layout {
+  width: 100%;
+}
+
 .right {
   gap: var(--space-lg);
+  width: 100%;
+  min-width: 0;
 }
 </style>

@@ -135,7 +135,7 @@ const emit = defineEmits(['close'])
 </script>
 
 <template>
-  <Card :style="{ width: '40%' }">
+  <Card :style="{ width: '100%' }">
     <template #header>
       <AFlex class="form-texts" vertical>
         <Body class="title">

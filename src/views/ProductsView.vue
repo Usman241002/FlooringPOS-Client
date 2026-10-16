@@ -71,43 +71,44 @@ function closeForm() {
 
   <Section>
     <AFlex class="products-container" vertical>
-      <AFlex class="filters">
-        <AInput
-          v-model:value="searchQuery"
-          allow-clear
-          class="search"
-          placeholder="Search products by name..."
-        >
-          <template #prefix>
-            <SearchOutlined />
-          </template>
-        </AInput>
-
-        <ASelect
-          v-model:value="selectedCategory"
-          :options="categoryOptions"
-          allow-clear
-          class="category"
-          placeholder="All categories"
-          style="width: 15rem"
-        />
-      </AFlex>
-      <AFlex class="content">
-        <ProductsTable :products="filteredProducts" @edit="openEditForm" />
-
-        <ProductForm v-if="productFormVisibility" :product="selectedProduct" @close="closeForm" />
-      </AFlex>
+      <ARow class="filters" gutter="16">
+        <ACol :span="18">
+          <AInput
+            v-model:value="searchQuery"
+            allow-clear
+            class="search"
+            placeholder="Search products by name..."
+          >
+            <template #prefix>
+              <SearchOutlined />
+            </template>
+          </AInput>
+        </ACol>
+        <ACol :span="6">
+          <ASelect
+            v-model:value="selectedCategory"
+            :options="categoryOptions"
+            allow-clear
+            class="category"
+            placeholder="All categories"
+            style="width: 100%"
+          />
+        </ACol>
+      </ARow>
+      <ARow :gutter="16">
+        <ACol :span="productFormVisibility ? 16 : 24">
+          <ProductsTable :products="filteredProducts" @edit="openEditForm"
+        /></ACol>
+        <ACol v-if="productFormVisibility" :span="8">
+          <ProductForm :product="selectedProduct" @close="closeForm" />
+        </ACol>
+      </ARow>
     </AFlex>
   </Section>
 </template>
 
 <style scoped>
 .products-container {
-  gap: var(--space-lg);
-}
-
-.content,
-.filters {
   gap: var(--space-lg);
 }
 
