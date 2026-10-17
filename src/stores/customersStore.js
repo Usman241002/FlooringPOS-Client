@@ -2,13 +2,65 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import API_BASE from '@/services/api.js'
 
-const customersStore = defineStore('customers', () => {
+const useCustomersStore = defineStore('customers', () => {
   const customer = ref(null)
   const customers = ref([])
   const loading = ref(false)
 
   function sameId(a, b) {
     return String(a) === String(b)
+  }
+
+  function addAddressToCustomer(customerId, address) {
+    const existingCustomer = customers.value.find((item) => sameId(item.id, customerId))
+
+    if (existingCustomer) {
+      existingCustomer.addresses ??= []
+      existingCustomer.addresses.push(address)
+    }
+
+    if (customer.value && sameId(customer.value.id, customerId)) {
+      const alreadyExists = (customer.value.addresses ?? []).some((item) =>
+        sameId(item.id, address.id),
+      )
+
+      if (!alreadyExists) {
+        customer.value.addresses ??= []
+        customer.value.addresses.push(address)
+      }
+    }
+  }
+
+  function updateAddressForCustomer(address) {
+    customers.value.forEach((item) => {
+      const index = (item.addresses ?? []).findIndex((existing) => sameId(existing.id, address.id))
+
+      if (index !== -1) {
+        item.addresses[index] = address
+      }
+    })
+
+    if (customer.value) {
+      const index = (customer.value.addresses ?? []).findIndex((existing) =>
+        sameId(existing.id, address.id),
+      )
+
+      if (index !== -1) {
+        customer.value.addresses[index] = address
+      }
+    }
+  }
+
+  function removeAddressFromCustomer(addressId) {
+    customers.value.forEach((item) => {
+      item.addresses = (item.addresses ?? []).filter((address) => !sameId(address.id, addressId))
+    })
+
+    if (customer.value) {
+      customer.value.addresses = (customer.value.addresses ?? []).filter(
+        (address) => !sameId(address.id, addressId),
+      )
+    }
   }
 
   async function fetchCustomers() {
@@ -137,122 +189,6 @@ const customersStore = defineStore('customers', () => {
     }
   }
 
-  async function createAddress(customerId, form) {
-    loading.value = true
-
-    try {
-      const response = await fetch(`${API_BASE}/addresses`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          ...form,
-          customerId,
-        }),
-      })
-
-      if (!response.ok) {
-        throw new Error(`Failed to create address (${response.status})`)
-      }
-
-      const newAddress = await response.json()
-
-      const existingCustomer = customers.value.find((item) => sameId(item.id, customerId))
-
-      if (existingCustomer) {
-        existingCustomer.addresses ??= []
-        existingCustomer.addresses.push(newAddress)
-      }
-
-      if (customer.value && sameId(customer.value.id, customerId)) {
-        customer.value.addresses ??= []
-        customer.value.addresses.push(newAddress)
-      }
-
-      return newAddress
-    } catch (err) {
-      console.error('Failed to create address:', err)
-      throw err
-    } finally {
-      loading.value = false
-    }
-  }
-
-  async function updateAddress(addressId, form) {
-    loading.value = true
-
-    try {
-      const response = await fetch(`${API_BASE}/addresses/${addressId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(form),
-      })
-
-      if (!response.ok) {
-        throw new Error(`Failed to update address (${response.status})`)
-      }
-
-      const updatedAddress = await response.json()
-
-      customers.value.forEach((item) => {
-        const index = (item.addresses ?? []).findIndex((address) => sameId(address.id, addressId))
-
-        if (index !== -1) {
-          item.addresses[index] = updatedAddress
-        }
-      })
-
-      if (customer.value) {
-        const index = (customer.value.addresses ?? []).findIndex((address) =>
-          sameId(address.id, addressId),
-        )
-
-        if (index !== -1) {
-          customer.value.addresses[index] = updatedAddress
-        }
-      }
-
-      return updatedAddress
-    } catch (err) {
-      console.error('Failed to update address:', err)
-      throw err
-    } finally {
-      loading.value = false
-    }
-  }
-
-  async function deleteAddress(addressId) {
-    loading.value = true
-
-    try {
-      const response = await fetch(`${API_BASE}/addresses/${addressId}`, {
-        method: 'DELETE',
-      })
-
-      if (!response.ok) {
-        throw new Error(`Failed to delete address (${response.status})`)
-      }
-
-      customers.value.forEach((item) => {
-        item.addresses = (item.addresses ?? []).filter((address) => !sameId(address.id, addressId))
-      })
-
-      if (customer.value) {
-        customer.value.addresses = (customer.value.addresses ?? []).filter(
-          (address) => !sameId(address.id, addressId),
-        )
-      }
-    } catch (err) {
-      console.error('Failed to delete address:', err)
-      throw err
-    } finally {
-      loading.value = false
-    }
-  }
-
   return {
     customer,
     customers,
@@ -262,10 +198,10 @@ const customersStore = defineStore('customers', () => {
     createCustomer,
     updateCustomer,
     deleteCustomer,
-    createAddress,
-    updateAddress,
-    deleteAddress,
+    addAddressToCustomer,
+    updateAddressForCustomer,
+    removeAddressFromCustomer,
   }
 })
 
-export default customersStore
+export default useCustomersStore

@@ -3,14 +3,14 @@ import Header from '@/components/Header.vue'
 import ProductForm from '@/components/forms/ProductForm.vue'
 import ProductsTable from '@/components/tables/ProductsTable.vue'
 import Section from '@/components/Section.vue'
-import categoriesStore from '@/stores/categoriesStore.js'
+import useCategoriesStore from '@/stores/categoriesStore.js'
 
-import productsStore from '@/stores/productsStore.js'
 import { PlusOutlined, SearchOutlined } from '@ant-design/icons-vue'
 import { computed, onMounted, ref } from 'vue'
+import useProductsStore from '@/stores/productsStore.js'
 
-const useProductsStore = productsStore()
-const useCategoriesStore = categoriesStore()
+const productsStore = useProductsStore()
+const categoriesStore = useCategoriesStore()
 
 const searchQuery = ref('')
 const selectedCategory = ref(undefined)
@@ -20,7 +20,7 @@ const selectedProduct = ref(null)
 const filteredProducts = computed(() => {
   const query = searchQuery.value.trim().toLowerCase()
 
-  return useProductsStore.products.filter((product) => {
+  return productsStore.products.filter((product) => {
     const matchesName = product.name?.toLowerCase().includes(query)
 
     const categoryId =
@@ -34,15 +34,15 @@ const filteredProducts = computed(() => {
 })
 
 const categoryOptions = computed(() =>
-  useCategoriesStore.categories.map((category) => ({
+  categoriesStore.categories.map((category) => ({
     label: category.name,
     value: category.id,
   })),
 )
 
 onMounted(() => {
-  useProductsStore.fetchProducts()
-  useCategoriesStore.fetchCategories()
+  productsStore.fetchProducts()
+  categoriesStore.fetchCategories()
 })
 
 function openEditForm(product) {
@@ -63,7 +63,7 @@ function closeForm() {
 <template>
   <Header>
     <template #title>Products</template>
-    <template #subtitle>{{ useProductsStore.products.length }} active - 14 inactive</template>
+    <template #subtitle>{{ productsStore.products.length }} active - 14 inactive</template>
     <template #actions>
       <AButton type="primary" @click="openCreateForm()"><PlusOutlined />Add Product</AButton>
     </template>

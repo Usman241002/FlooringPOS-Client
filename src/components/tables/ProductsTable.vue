@@ -1,6 +1,6 @@
 <script setup>
 import Tag from '@/components/Tag.vue'
-import productsStore from '@/stores/productsStore.js'
+import useProductsStore from '@/stores/productsStore.js'
 import { ref } from 'vue'
 
 const { products } = defineProps({
@@ -10,7 +10,7 @@ const { products } = defineProps({
   },
 })
 
-const useProductStore = productsStore()
+const productStore = useProductsStore()
 
 const emit = defineEmits(['edit'])
 
@@ -71,7 +71,7 @@ function handleRowClick(record) {
         })
       "
       :data-source="products"
-      :loading="useProductStore.loading"
+      :loading="productStore.loading"
       :locale="{ emptyText: 'No products found.' }"
       :pagination="pagination"
       row-key="id"

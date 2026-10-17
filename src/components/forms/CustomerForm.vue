@@ -3,11 +3,11 @@ import Card from '@/components/Card.vue'
 import Body from '@/components/typography/Body.vue'
 import { CloseOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons-vue'
 import { onMounted, onUnmounted, reactive, watch } from 'vue'
-import customersStore from '@/stores/customersStore.js'
+import useCustomersStore from '@/stores/customersStore.js'
 import { message } from 'ant-design-vue'
 
 const emit = defineEmits(['close'])
-const useCustomersStore = customersStore()
+const customersStore = useCustomersStore()
 
 const form = reactive({
   firstName: '',
@@ -24,7 +24,7 @@ onUnmounted(() => {
 })
 
 watch(
-  () => useCustomersStore.customer,
+  () => customersStore.customer,
   (customer) => {
     Object.assign(form, {
       firstName: customer?.firstName ?? '',
@@ -37,11 +37,11 @@ watch(
 
 async function handleSubmit() {
   try {
-    if (useCustomersStore.customer?.id) {
-      await useCustomersStore.updateCustomer(useCustomersStore.customer.id, form)
+    if (customersStore.customer?.id) {
+      await customersStore.updateCustomer(customersStore.customer.id, form)
       message.success('Customer updated successfully')
     } else {
-      await useCustomersStore.createCustomer(form)
+      await customersStore.createCustomer(form)
       message.success('Customer added successfully')
     }
 
@@ -52,7 +52,7 @@ async function handleSubmit() {
 }
 
 async function handleDelete(id) {
-  await useCustomersStore.deleteCustomer(id)
+  await customersStore.deleteCustomer(id)
   message.success('Customer deleted successfully')
   Object.assign(form, {
     firstName: '',
@@ -89,8 +89,8 @@ function handleKeyPress(event) {
 
         <Body class="subtitle">
           {{
-            useCustomersStore.customer
-              ? `${useCustomersStore.customer.firstName} ${useCustomersStore.customer.lastName}`
+            customersStore.customer
+              ? `${customersStore.customer.firstName} ${customersStore.customer.lastName}`
               : 'Enter the customer details below.'
           }}
         </Body>
@@ -126,22 +126,22 @@ function handleKeyPress(event) {
       </ARow>
       <AFlex class="button-section">
         <AButton
-          v-if="useCustomersStore.customer"
-          :disabled="useCustomersStore.loading"
-          :loading="useCustomersStore.loading"
+          v-if="customersStore.customer"
+          :disabled="customersStore.loading"
+          :loading="customersStore.loading"
           danger
           type="default"
-          @click="handleDelete(useCustomersStore.customer.id)"
+          @click="handleDelete(customersStore.customer.id)"
           ><DeleteOutlined /> Delete</AButton
         >
         <AButton
-          :disabled="useCustomersStore.loading"
-          :loading="useCustomersStore.loading"
+          :disabled="customersStore.loading"
+          :loading="customersStore.loading"
           html-type="submit"
           type="primary"
         >
-          <PlusOutlined v-if="!useCustomersStore.customer" />
-          {{ useCustomersStore.customer ? 'Save Changes' : 'Add Customer' }}
+          <PlusOutlined v-if="!customersStore.customer" />
+          {{ customersStore.customer ? 'Save Changes' : 'Add Customer' }}
         </AButton>
       </AFlex>
     </AForm>

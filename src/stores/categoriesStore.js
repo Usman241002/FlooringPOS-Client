@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import API_BASE from '@/services/api.js'
 
-const categoriesStore = defineStore('categories', () => {
+const useCategoriesStore = defineStore('categories', () => {
   const categories = ref([])
   const loading = ref(false)
   const error = ref(null)
@@ -32,4 +32,4 @@ const categoriesStore = defineStore('categories', () => {
   }
 })
 
-export default categoriesStore
+export default useCategoriesStore

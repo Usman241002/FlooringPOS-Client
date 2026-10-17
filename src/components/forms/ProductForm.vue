@@ -1,13 +1,12 @@
 <script setup>
 import Body from '@/components/typography/Body.vue'
 import Label from '@/components/typography/Label.vue'
-import brandsStore from '@/stores/brandsStore.js'
-import categoriesStore from '@/stores/categoriesStore.js'
-import productsStore from '@/stores/productsStore.js'
 import { CloseOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons-vue'
 import { message } from 'ant-design-vue'
 import { computed, onMounted, onUnmounted, reactive, watch } from 'vue'
 import Card from '@/components/Card.vue'
+import useProductsStore from '@/stores/productsStore.js'
+import useBrandsStore from '@/stores/brandsStore.js'
 
 const { product } = defineProps({
   product: {
@@ -16,14 +15,14 @@ const { product } = defineProps({
   },
 })
 
-const useProductsStore = productsStore()
-const useBrandsStore = brandsStore()
-const useCategoriesStore = categoriesStore()
+const productsStore = useProductsStore()
+const brandsStore = useBrandsStore()
+const categoriesStore = categoriesStore()
 
 onMounted(() => {
   window.addEventListener('keydown', handleKeyPress)
-  useBrandsStore.fetchBrands()
-  useCategoriesStore.fetchCategories()
+  brandsStore.fetchBrands()
+  categoriesStore.fetchCategories()
 })
 
 onUnmounted(() => {
@@ -55,14 +54,14 @@ watch(
 )
 
 const brandOptions = computed(() =>
-  useBrandsStore.brands.map((brand) => ({
+  brandsStore.brands.map((brand) => ({
     label: brand.name,
     value: brand.id,
   })),
 )
 
 const categoryOptions = computed(() =>
-  useCategoriesStore.categories.map((category) => ({
+  categoriesStore.categories.map((category) => ({
     label: category.name,
     value: category.id,
   })),
@@ -71,10 +70,10 @@ const categoryOptions = computed(() =>
 async function handleSubmit() {
   try {
     if (product?.id) {
-      await useProductsStore.updateProduct(product.id, form)
+      await productsStore.updateProduct(product.id, form)
       message.success('Product updated successfully')
     } else {
-      await useProductsStore.createProduct(form)
+      await productsStore.createProduct(form)
       message.success('Product added successfully')
     }
 
@@ -104,7 +103,7 @@ function handleKeyPress(event) {
 }
 
 async function handleDelete(id) {
-  await useProductsStore.deleteProduct(id)
+  await productsStore.deleteProduct(id)
   message.success('Product deleted successfully')
   Object.assign(form, {
     brand: undefined,
@@ -158,7 +157,7 @@ const emit = defineEmits(['close'])
           <AFormItem :rules="rules.brand" label="Brand" name="brand">
             <ASelect
               v-model:value="form.brand"
-              :loading="useBrandsStore.loading"
+              :loading="brandsStore.loading"
               :options="brandOptions"
               allow-clear
               option-filter-prop="label"
@@ -171,7 +170,7 @@ const emit = defineEmits(['close'])
           <AFormItem :rules="rules.category" label="Category" name="category">
             <ASelect
               v-model:value="form.category"
-              :loading="useCategoriesStore.loading"
+              :loading="categoriesStore.loading"
               :options="categoryOptions"
               allow-clear
               option-filter-prop="label"
@@ -230,16 +229,16 @@ const emit = defineEmits(['close'])
       <AFlex class="button-section">
         <AButton
           v-if="product"
-          :disabled="useProductsStore.loading"
-          :loading="useProductsStore.loading"
+          :disabled="productsStore.loading"
+          :loading="productsStore.loading"
           danger
           type="default"
           @click="handleDelete(product.id)"
           ><DeleteOutlined /> Delete</AButton
         >
         <AButton
-          :disabled="useProductsStore.loading"
-          :loading="useProductsStore.loading"
+          :disabled="productsStore.loading"
+          :loading="productsStore.loading"
           html-type="submit"
           type="primary"
         >

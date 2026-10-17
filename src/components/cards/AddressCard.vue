@@ -3,19 +3,30 @@ import Body from '@/components/typography/Body.vue'
 import Label from '@/components/typography/Label.vue'
 import Tag from '@/components/Tag.vue'
 
-const { address } = defineProps({
+const { address, active } = defineProps({
   address: {
     type: Object,
     required: true,
   },
+  active: {
+    type: Boolean,
+    default: false,
+  },
 })
+
+const emit = defineEmits(['click'])
+
+function handleClick() {
+  emit('click')
+}
 </script>
+
 <template>
-  <div class="address-container">
+  <div :class="['address-container', 'card', { active }]" @click="handleClick">
     <AFlex class="left" vertical>
-      <Body class="title">{{
-        address.addressLine1 + (address.addressLine2 ? ', ' + address.addressLine2 : '')
-      }}</Body>
+      <Body class="title">
+        {{ address.addressLine1 + (address.addressLine2 ? ', ' + address.addressLine2 : '') }}
+      </Body>
       <Label>{{ address.postcode }}</Label>
     </AFlex>
 
@@ -26,17 +37,33 @@ const { address } = defineProps({
 <style scoped>
 .address-container {
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  background: var(--bg);
-  border-radius: 0.5rem;
-  border: 1px solid transparent;
   width: 100%;
   padding: var(--space-lg);
-  align-items: center;
+
+  cursor: pointer;
+  transition: box-shadow 0.2s ease;
+  border: 2px solid transparent;
 }
 
 .address-container:hover {
-  cursor: pointer;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 10%);
+}
+
+.address-container:focus-visible {
+  outline: 2px solid var(--border);
+  outline-offset: 2px;
+}
+
+.address-container.active {
+  background-color: var(--primary-bg) !important;
+  border: 2px solid var(--primary);
+}
+
+.left {
+  gap: var(--space-md);
+  align-items: flex-start;
 }
 
 .title {

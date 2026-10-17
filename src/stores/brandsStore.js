@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import API_BASE from '@/services/api.js'
 
-const brandsStore = defineStore('brands', () => {
+const useBrandsStore = defineStore('brands', () => {
   const brands = ref([])
   const loading = ref(false)
   const error = ref(null)
@@ -32,4 +32,4 @@ const brandsStore = defineStore('brands', () => {
   }
 })
 
-export default brandsStore
+export default useBrandsStore

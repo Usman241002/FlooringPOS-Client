@@ -3,10 +3,9 @@ import Card from '@/components/Card.vue'
 import Body from '@/components/typography/Body.vue'
 import AddressCard from '@/components/cards/AddressCard.vue'
 import { EditOutlined } from '@ant-design/icons-vue'
+import useCustomersStore from '@/stores/customersStore.js'
 
-import customersStore from '@/stores/customersStore.js'
-
-const useCustomersStore = customersStore()
+const customersStore = useCustomersStore()
 </script>
 
 <template>
@@ -15,18 +14,18 @@ const useCustomersStore = customersStore()
       <AFlex vertical>
         <Body class="title"> Address List </Body>
         <Body class="subtitle">
-          {{ useCustomersStore.customer.addresses.length }} saved address{{
-            useCustomersStore.customer.addresses.length > 1 ? 'es' : ''
+          {{ customersStore.customer.addresses.length }} saved address{{
+            customersStore.customer.addresses.length > 1 ? 'es' : ''
           }}
         </Body>
       </AFlex>
-      <RouterLink :to="'/customers/' + useCustomersStore.customer.id">
+      <RouterLink :to="'/customers/' + customersStore.customer.id">
         <AButton type="text"><EditOutlined />Edit</AButton>
       </RouterLink>
     </template>
     <AFlex class="addresses-container" vertical>
       <AddressCard
-        v-for="address in useCustomersStore.customer.addresses"
+        v-for="address in customersStore.customer.addresses"
         v-bind:key="address.id"
         :address="address"
       />

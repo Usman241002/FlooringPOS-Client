@@ -4,7 +4,8 @@ import Body from '@/components/typography/Body.vue'
 import { CloseOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons-vue'
 import { onMounted, onUnmounted, reactive, watch } from 'vue'
 import { message } from 'ant-design-vue'
-import customersStore from '@/stores/customersStore.js'
+import useCustomersStore from '@/stores/customersStore.js'
+import useAddressesStore from '@/stores/addressesStore.js'
 
 const { address } = defineProps({
   address: {
@@ -14,7 +15,8 @@ const { address } = defineProps({
 })
 
 const emit = defineEmits(['close'])
-const useCustomersStore = customersStore()
+const customersStore = useCustomersStore()
+const addressesStore = useAddressesStore()
 
 const form = reactive({
   addressLine1: '',
@@ -51,7 +53,7 @@ onUnmounted(() => {
 })
 
 async function handleSubmit() {
-  const customerId = useCustomersStore.customer?.id
+  const customerId = customersStore.customer?.id
 
   if (!customerId) {
     message.error('Select a customer before saving an address')
@@ -60,10 +62,10 @@ async function handleSubmit() {
 
   try {
     if (address?.id) {
-      await useCustomersStore.updateAddress(address.id, { ...form })
+      await addressesStore.updateAddress(address.id, { ...form })
       message.success('Address updated successfully')
     } else {
-      await useCustomersStore.createAddress(customerId, { ...form })
+      await addressesStore.createAddress(customerId, { ...form })
       message.success('Address added successfully')
     }
 
@@ -77,7 +79,7 @@ async function handleDelete() {
   if (!address?.id) return
 
   try {
-    await useCustomersStore.deleteAddress(address.id)
+    await addressesStore.deleteAddress(address.id)
     message.success('Address deleted successfully')
     emit('close')
   } catch (err) {
@@ -107,8 +109,8 @@ function handleKeyPress(event) {
 
         <Body class="subtitle">
           {{
-            useCustomersStore.customer
-              ? `For ${useCustomersStore.customer.firstName} ${useCustomersStore.customer.lastName}`
+            customersStore.customer
+              ? `For ${customersStore.customer.firstName} ${customersStore.customer.lastName}`
               : 'Select a customer to manage addresses.'
           }}
         </Body>
@@ -146,8 +148,8 @@ function handleKeyPress(event) {
       <AFlex class="button-section">
         <AButton
           v-if="address?.id"
-          :disabled="useCustomersStore.loading"
-          :loading="useCustomersStore.loading"
+          :disabled="customersStore.loading"
+          :loading="customersStore.loading"
           danger
           @click="handleDelete"
         >
@@ -156,8 +158,8 @@ function handleKeyPress(event) {
         </AButton>
 
         <AButton
-          :disabled="useCustomersStore.loading || !useCustomersStore.customer"
-          :loading="useCustomersStore.loading"
+          :disabled="customersStore.loading || !customersStore.customer"
+          :loading="customersStore.loading"
           html-type="submit"
           type="primary"
         >
