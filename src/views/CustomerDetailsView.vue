@@ -8,27 +8,28 @@ import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { PlusOutlined } from '@ant-design/icons-vue'
 import AddressForm from '@/components/forms/AddressForm.vue'
+import useAddressesStore from '@/stores/addressesStore.js'
 
 const customersStore = useCustomersStore()
+const addressesStore = useAddressesStore()
 const route = useRoute()
 const customerId = route.params.id
 
 const addressFormVisibility = ref(false)
-const selectedAddress = ref(null)
 
 function openEditForm(address) {
   addressFormVisibility.value = true
-  selectedAddress.value = address
+  addressesStore.address = address
 }
 
 function openCreateForm() {
   addressFormVisibility.value = true
-  selectedAddress.value = null
+  addressesStore.address = null
 }
 
 function closeForm() {
   addressFormVisibility.value = false
-  selectedAddress.value = null
+  addressesStore.address = null
 }
 
 onMounted(async () => {
@@ -55,7 +56,7 @@ onMounted(async () => {
         <CustomerDetails :customer="customersStore.customer" @edit="openEditForm" />
       </ACol>
       <ACol v-if="addressFormVisibility" span="16">
-        <AddressForm :address="selectedAddress" @close="closeForm" />
+        <AddressForm :address="addressesStore.address" @close="closeForm" />
       </ACol>
     </ARow>
   </Section>

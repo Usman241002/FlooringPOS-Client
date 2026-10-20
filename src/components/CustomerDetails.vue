@@ -3,6 +3,7 @@ import Card from '@/components/Card.vue'
 import Label from '@/components/typography/Label.vue'
 import Body from '@/components/typography/Body.vue'
 import AddressCard from '@/components/cards/AddressCard.vue'
+import useAddressesStore from '@/stores/addressesStore.js'
 
 const { customer } = defineProps({
   customer: {
@@ -10,6 +11,8 @@ const { customer } = defineProps({
     required: true,
   },
 })
+
+const addressesStore = useAddressesStore()
 
 const emit = defineEmits(['edit'])
 
@@ -42,6 +45,7 @@ function editAddress(address) {
         <AddressCard
           v-for="address in customer.addresses"
           :key="address.id"
+          :active="address.id === addressesStore.address?.id"
           :address="address"
           @click="editAddress(address)"
         />

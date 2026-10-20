@@ -5,6 +5,8 @@ import API_BASE from '@/services/api.js'
 
 const useAddressesStore = defineStore('addresses', () => {
   const loading = ref(false)
+  const address = ref(null)
+
   const useCustomersStore = customersStore()
 
   async function createAddress(customerId, form) {
@@ -91,6 +93,7 @@ const useAddressesStore = defineStore('addresses', () => {
 
   return {
     loading,
+    address,
     createAddress,
     updateAddress,
     deleteAddress,
