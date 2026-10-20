@@ -7,31 +7,53 @@ import CustomerForm from '@/components/forms/CustomerForm.vue'
 import CustomerList from '@/components/tables/CustomerList.vue'
 
 import useCustomersStore from '@/stores/customersStore.js'
+import useAddressesStore from '@/stores/addressesStore.js'
 import { onMounted, ref } from 'vue'
 import AddressList from '@/components/tables/AddressList.vue'
+import AddressForm from '@/components/forms/AddressForm.vue'
 
 const customersStore = useCustomersStore()
+const addressesStore = useAddressesStore()
 
 const customerFormVisibility = ref(false)
+const addressFormVisibility = ref(false)
 
-function openEditForm(customer) {
+function openCustomerEditForm(customer) {
   customersStore.customer = customer
   customerFormVisibility.value = true
+  addressFormVisibility.value = false
 }
 
-function openCreateForm() {
+function openCreateCustomerForm() {
   customersStore.customer = null
   customerFormVisibility.value = true
+  addressFormVisibility.value = false
 }
 
-function closeForm() {
+function closeCustomerForm() {
   customersStore.customer = null
   customerFormVisibility.value = false
+  addressFormVisibility.value = false
 }
 
 onMounted(async () => {
   await customersStore.fetchCustomers()
 })
+
+function openEditAddressForm(address) {
+  addressesStore.address = address
+  addressFormVisibility.value = true
+}
+
+function openCreateAddressForm() {
+  addressFormVisibility.value = true
+  addressesStore.address = null
+}
+
+function closeAddressForm() {
+  addressFormVisibility.value = false
+  addressesStore.address = null
+}
 </script>
 
 <template>
@@ -39,7 +61,7 @@ onMounted(async () => {
     <template #title>Customers</template>
     <template #subtitle> {{ customersStore.customers.length }} customer records </template>
     <template #actions>
-      <AButton type="primary" @click="openCreateForm">
+      <AButton type="primary" @click="openCreateCustomerForm">
         <UserAddOutlined />
         New Customer
       </AButton>
@@ -49,14 +71,24 @@ onMounted(async () => {
   <Section>
     <ARow :gutter="[16, 16]" class="customers-layout">
       <ACol :span="12">
-        <CustomerList :customers="customersStore.customers" @edit="openEditForm" />
+        <CustomerList :customers="customersStore.customers" @edit="openCustomerEditForm" />
       </ACol>
 
       <ACol v-if="customerFormVisibility" :span="12">
         <AFlex class="right" vertical>
-          <CustomerForm @close="closeForm" />
+          <CustomerForm @close="closeCustomerForm" />
 
-          <AddressList v-if="customersStore.customer" />
+          <AddressList
+            v-if="customersStore.customer"
+            @click="openCreateAddressForm"
+            @edit="openEditAddressForm"
+          />
+          <AddressForm
+            v-if="customersStore.customer && addressFormVisibility"
+            :key="addressesStore.address?.id"
+            :address="addressesStore.address"
+            @close="closeAddressForm"
+          />
         </AFlex>
       </ACol>
     </ARow>

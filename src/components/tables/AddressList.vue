@@ -2,10 +2,20 @@
 import Card from '@/components/Card.vue'
 import Body from '@/components/typography/Body.vue'
 import AddressCard from '@/components/cards/AddressCard.vue'
-import { EditOutlined } from '@ant-design/icons-vue'
 import useCustomersStore from '@/stores/customersStore.js'
+import { PlusOutlined } from '@ant-design/icons-vue'
 
 const customersStore = useCustomersStore()
+
+const emit = defineEmits(['click', 'edit'])
+
+function handleClick() {
+  emit('click')
+}
+
+function handleEdit(address) {
+  emit('edit', address)
+}
 </script>
 
 <template>
@@ -15,19 +25,18 @@ const customersStore = useCustomersStore()
         <Body class="title"> Address List </Body>
         <Body class="subtitle">
           {{ customersStore.customer.addresses.length }} saved address{{
-            customersStore.customer.addresses.length > 1 ? 'es' : ''
+            customersStore.customer.addresses.length === 1 ? '' : 'es'
           }}
         </Body>
       </AFlex>
-      <RouterLink :to="'/customers/' + customersStore.customer.id">
-        <AButton type="text"><EditOutlined />Edit</AButton>
-      </RouterLink>
+      <AButton type="text" @click="handleClick"><PlusOutlined />Add Address</AButton>
     </template>
     <AFlex class="addresses-container" vertical>
       <AddressCard
         v-for="address in customersStore.customer.addresses"
         v-bind:key="address.id"
         :address="address"
+        @edit="handleEdit"
       />
     </AFlex>
   </Card>

@@ -7,7 +7,6 @@ import CustomersView from '@/views/CustomersView.vue'
 import ProductsView from '@/views/ProductsView.vue'
 import SettingsView from '@/views/SettingsView.vue'
 import ComponentPreview from '@/views/ComponentPreview.vue'
-import CustomerDetailsView from '@/views/CustomerDetailsView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -22,7 +21,7 @@ const router = createRouter({
           component: SalesView,
         },
         {
-          path: 'measurements',
+          path: 'measurements/:id',
           name: 'Measurements',
           component: MeasurementsView,
         },
@@ -40,11 +39,6 @@ const router = createRouter({
           path: 'products',
           name: 'Products',
           component: ProductsView,
-        },
-        {
-          path: 'customers/:id',
-          name: 'CustomerDetails',
-          component: CustomerDetailsView,
         },
         {
           path: 'settings',

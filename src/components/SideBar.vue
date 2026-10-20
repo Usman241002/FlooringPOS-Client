@@ -1,7 +1,6 @@
 <script setup>
 import {
   AppstoreOutlined,
-  ColumnWidthOutlined,
   FileOutlined,
   LayoutOutlined,
   SettingOutlined,
@@ -16,9 +15,8 @@ const menuItems = [
     component: ShoppingCartOutlined,
     to: '/sell',
   },
-  { name: 'Measurements', component: ColumnWidthOutlined, to: '/measurements' },
-  { name: 'Quotes', component: FileOutlined, to: '/quotes' },
   { name: 'Customers', component: UsergroupAddOutlined, to: '/customers' },
+  { name: 'Quotes', component: FileOutlined, to: '/quotes' },
   { name: 'Products', component: AppstoreOutlined, to: '/products' },
   { name: 'Settings', component: SettingOutlined, to: '/settings' },
 ]

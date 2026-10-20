@@ -1,37 +1,35 @@
 <script setup>
 import Body from '@/components/typography/Body.vue'
 import Label from '@/components/typography/Label.vue'
-import Tag from '@/components/Tag.vue'
+import { EditOutlined } from '@ant-design/icons-vue'
 
-const { address, active } = defineProps({
+const { address } = defineProps({
   address: {
     type: Object,
     required: true,
   },
-  active: {
-    type: Boolean,
-    default: false,
-  },
 })
 
-const emit = defineEmits(['click'])
+const emit = defineEmits(['edit'])
 
-function handleClick() {
-  emit('click')
+function handleEdit(address) {
+  emit('edit', address)
 }
 </script>
 
 <template>
-  <div :class="['address-container', 'card', { active }]" @click="handleClick">
-    <AFlex class="left" vertical>
-      <Body class="title">
-        {{ address.addressLine1 + (address.addressLine2 ? ', ' + address.addressLine2 : '') }}
-      </Body>
-      <Label>{{ address.postcode }}</Label>
-    </AFlex>
+  <AFlex class="address-container card">
+    <RouterLink :to="`/measurements/${address.id}`" class="link">
+      <AFlex class="left" vertical>
+        <Body class="title"
+          >{{ address.addressLine1 }}{{ address.addressLine2 ? ', ' + address.addressLine2 : '' }}
+        </Body>
+        <Label>{{ address.postcode }}</Label>
+      </AFlex>
+    </RouterLink>
 
-    <Tag>0 rooms</Tag>
-  </div>
+    <AButton type="text" @click="handleEdit(address)"><EditOutlined /></AButton>
+  </AFlex>
 </template>
 
 <style scoped>
@@ -40,9 +38,8 @@ function handleClick() {
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  padding: var(--space-lg);
+  padding: 0 var(--space-lg) 0 0;
 
-  cursor: pointer;
   transition: box-shadow 0.2s ease;
   border: 2px solid transparent;
 }
@@ -51,23 +48,22 @@ function handleClick() {
   box-shadow: 0 2px 8px rgb(0 0 0 / 10%);
 }
 
-.address-container:focus-visible {
+.link:focus-visible {
   outline: 2px solid var(--border);
   outline-offset: 2px;
 }
 
-.address-container.active {
-  background-color: var(--primary-bg) !important;
-  border: 2px solid var(--primary);
-}
-
 .left {
-  gap: var(--space-md);
   align-items: flex-start;
 }
 
 .title {
   font-weight: bold;
   color: var(--text-primary);
+}
+
+.link {
+  flex: 1;
+  padding: var(--space-lg);
 }
 </style>
