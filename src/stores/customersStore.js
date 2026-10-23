@@ -118,7 +118,7 @@ const useCustomersStore = defineStore('customers', () => {
       }
 
       const newCustomer = await response.json()
-      customers.value.push(newCustomer)
+      customers.value.push({ ...newCustomer, addresses: [] })
 
       return newCustomer
     } catch (err) {

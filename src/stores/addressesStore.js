@@ -9,6 +9,24 @@ const useAddressesStore = defineStore('addresses', () => {
 
   const useCustomersStore = customersStore()
 
+  async function fetchAddressById(addressId) {
+    loading.value = true
+
+    try {
+      const response = await fetch(`${API_BASE}/addresses/${addressId}`)
+      if (!response.ok) {
+        throw new Error(`Failed to get address (${response.status})`)
+      }
+
+      address.value = await response.json()
+    } catch (err) {
+      console.error('Failed to get address:', err)
+      throw err
+    } finally {
+      loading.value = false
+    }
+  }
+
   async function createAddress(customerId, form) {
     loading.value = true
 
@@ -94,6 +112,7 @@ const useAddressesStore = defineStore('addresses', () => {
   return {
     loading,
     address,
+    fetchAddressById,
     createAddress,
     updateAddress,
     deleteAddress,
