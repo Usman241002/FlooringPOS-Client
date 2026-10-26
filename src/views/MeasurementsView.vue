@@ -41,7 +41,12 @@ function closeForm() {
 <template>
   <Header>
     <template #title>Room Measurements</template>
-    <template #subtitle>Quote Id - Customer Name</template>
+    <template #subtitle
+      >{{ addressesStore.address.addressLine1
+      }}{{
+        addressesStore.address.postcode ? ', ' + addressesStore.address.postcode : ''
+      }}</template
+    >
     <template #actions>
       <AButton type="primary" @click="openCreateForm">
         <PlusOutlined />
