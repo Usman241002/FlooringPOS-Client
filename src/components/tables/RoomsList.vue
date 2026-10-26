@@ -2,6 +2,7 @@
 import Card from '@/components/Card.vue'
 import Body from '@/components/typography/Body.vue'
 import RoomCard from '@/components/cards/RoomCard.vue'
+import useRoomsStore from '@/stores/roomsStore.js'
 
 const { rooms } = defineProps({
   rooms: {
@@ -9,6 +10,14 @@ const { rooms } = defineProps({
     required: true,
   },
 })
+
+const roomsStore = useRoomsStore()
+const emit = defineEmits(['edit'])
+
+function handleClick(room) {
+  roomsStore.room = room
+  emit('edit', room)
+}
 </script>
 
 <template>
@@ -24,7 +33,13 @@ const { rooms } = defineProps({
       </AFlex>
     </template>
     <AFlex class="rooms-list" vertical>
-      <RoomCard v-for="room in rooms" :key="room.id" :room="room" />
+      <RoomCard
+        v-for="room in rooms"
+        :key="room.id"
+        :active="room.id === roomsStore.room?.id"
+        :room="room"
+        @click="handleClick(room)"
+      />
     </AFlex>
   </Card>
 </template>

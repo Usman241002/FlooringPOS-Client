@@ -6,12 +6,12 @@ import RoomsList from '@/components/tables/RoomsList.vue'
 import RoomForm from '@/components/forms/RoomForm.vue'
 
 import useAddressesStore from '@/stores/addressesStore'
-import useRoomStore from '@/stores/roomsStore.js'
+import useRoomsStore from '@/stores/roomsStore.js'
 import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 
 const addressesStore = useAddressesStore()
-const roomStore = useRoomStore()
+const roomsStore = useRoomsStore()
 const route = useRoute()
 
 const roomId = route.params.id
@@ -23,17 +23,17 @@ onMounted(async () => {
 const roomFormVisibility = ref(false)
 
 function openEditForm(room) {
-  roomStore.room = room
+  roomsStore.room = room
   roomFormVisibility.value = true
 }
 
 function openCreateForm() {
-  roomStore.room = null
+  roomsStore.room = null
   roomFormVisibility.value = true
 }
 
 function closeForm() {
-  roomStore.room = null
+  roomsStore.room = null
   roomFormVisibility.value = false
 }
 </script>
@@ -67,7 +67,7 @@ function closeForm() {
       </ACol>
 
       <ACol :span="16">
-        <RoomForm v-if="roomFormVisibility" :room="roomStore.room" @close="closeForm" />
+        <RoomForm v-if="roomFormVisibility" :room="roomsStore.room" @close="closeForm" />
       </ACol>
     </ARow>
   </Section>
