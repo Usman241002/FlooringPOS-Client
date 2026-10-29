@@ -42,7 +42,7 @@ function closeForm() {
   <Header>
     <template #title>Room Measurements</template>
     <template #subtitle
-      >{{ addressesStore.address.addressLine1
+      >{{ addressesStore.address.line1
       }}{{
         addressesStore.address.postcode ? ', ' + addressesStore.address.postcode : ''
       }}</template

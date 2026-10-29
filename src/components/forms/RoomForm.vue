@@ -1,16 +1,13 @@
+```vue
 <script setup>
-import Card from '@/components/Card.vue'
-import Body from '@/components/typography/Body.vue'
-import { CloseOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons-vue'
-import { computed, onMounted, onUnmounted, reactive, ref, watch } from 'vue'
+import { computed, reactive, ref, watch } from 'vue'
 import { message } from 'ant-design-vue'
+import { DeleteOutlined, PlusOutlined } from '@ant-design/icons-vue'
 import useAddressesStore from '@/stores/addressesStore.js'
 import useRoomsStore from '@/stores/roomsStore.js'
+import BaseForm from '@/components/forms/BaseForm.vue'
 
 const emit = defineEmits(['close'])
-
-const addressesStore = useAddressesStore()
-const roomsStore = useRoomsStore()
 
 const props = defineProps({
   room: {
@@ -18,6 +15,9 @@ const props = defineProps({
     default: null,
   },
 })
+
+const addressesStore = useAddressesStore()
+const roomsStore = useRoomsStore()
 
 const form = reactive({
   name: '',
@@ -45,6 +45,7 @@ const rules = {
   name: [
     {
       required: true,
+      whitespace: true,
       message: 'Please enter a room name',
     },
   ],
@@ -69,7 +70,8 @@ const rules = {
 const isEditing = computed(() => !!props.room?.id)
 
 const area = computed(() => {
-  if (!form.length || !form.width) return null
+  if (form.length == null || form.width == null) return null
+  if (form.length <= 0 || form.width <= 0) return null
 
   return (form.length * form.width).toFixed(2)
 })
@@ -109,14 +111,6 @@ watch(
   },
   { immediate: true },
 )
-
-onMounted(() => {
-  window.addEventListener('keydown', handleKeyPress)
-})
-
-onUnmounted(() => {
-  window.removeEventListener('keydown', handleKeyPress)
-})
 
 async function handleSubmit() {
   try {
@@ -162,97 +156,73 @@ async function handleDelete() {
 function handleCancel() {
   emit('close')
 }
-
-function handleKeyPress(event) {
-  if (event.key === 'Escape') {
-    handleCancel()
-  }
-}
 </script>
 
 <template>
-  <Card :style="{ width: '100%' }">
-    <template #header>
-      <AFlex vertical>
-        <Body class="title">
-          {{ form.name || (isEditing ? 'Edit room' : 'New room') }}
-        </Body>
-        <Body class="subtitle">{{ addressLabel }}</Body>
-      </AFlex>
-
-      <AButton type="text" @click="handleCancel">
-        <CloseOutlined />
-      </AButton>
-    </template>
-
+  <BaseForm
+    :loading="roomsStore.loading"
+    :model="form"
+    :submit-label="isEditing ? 'Save Changes' : 'Add Room'"
+    :subtitle="addressLabel"
+    :title="isEditing ? 'Edit room' : 'New room'"
+    @close="handleCancel"
+    @submit="handleSubmit"
+  >
     <ARow :gutter="[16, 16]">
       <ACol :span="12">
-        <AForm
-          id="room-form"
-          :model="form"
-          :rules="rules"
-          class="room-form"
-          layout="vertical"
-          @finish="handleSubmit"
-        >
-          <ARow :gutter="[16, 0]">
-            <ACol :span="24">
-              <AFormItem label="Room name" name="name">
-                <AInput v-model:value="form.name" placeholder="e.g. Living room" />
-              </AFormItem>
-            </ACol>
+        <AFormItem :rules="rules.name" label="Room name" name="name">
+          <AInput v-model:value="form.name" placeholder="e.g. Living room" />
+        </AFormItem>
 
-            <ACol :span="24">
-              <AFormItem label="Measurement unit">
-                <AButtonGroup>
-                  <AButton
-                    v-for="item in units"
-                    :key="item.value"
-                    :type="unit === item.value ? 'primary' : 'default'"
-                    @click="unit = item.value"
-                  >
-                    {{ item.value }}
-                  </AButton>
-                </AButtonGroup>
-              </AFormItem>
-            </ACol>
+        <AFormItem label="Measurement unit">
+          <AButtonGroup>
+            <AButton
+              v-for="item in units"
+              :key="item.value"
+              :type="unit === item.value ? 'primary' : 'default'"
+              @click="unit = item.value"
+            >
+              {{ item.value }}
+            </AButton>
+          </AButtonGroup>
+        </AFormItem>
 
-            <ACol :span="12">
-              <AFormItem label="Length" name="length">
-                <AInputNumber
-                  v-model:value="displayLength"
-                  :min="0"
-                  :precision="2"
-                  :step="0.01"
-                  placeholder="0.00"
-                  style="width: 100%"
-                >
-                  <template #addonAfter>{{ unit }}</template>
-                </AInputNumber>
-              </AFormItem>
-            </ACol>
+        <ARow :gutter="[16, 0]">
+          <ACol :span="12">
+            <AFormItem :rules="rules.length" label="Length" name="length">
+              <AInputNumber
+                v-model:value="displayLength"
+                :min="0"
+                :precision="2"
+                :step="0.01"
+                placeholder="0.00"
+                style="width: 100%"
+              >
+                <template #addonAfter>{{ unit }}</template>
+              </AInputNumber>
+            </AFormItem>
+          </ACol>
 
-            <ACol :span="12">
-              <AFormItem label="Width" name="width">
-                <AInputNumber
-                  v-model:value="displayWidth"
-                  :min="0"
-                  :precision="2"
-                  :step="0.01"
-                  placeholder="0.00"
-                  style="width: 100%"
-                >
-                  <template #addonAfter>{{ unit }}</template>
-                </AInputNumber>
-              </AFormItem>
-            </ACol>
-          </ARow>
-        </AForm>
+          <ACol :span="12">
+            <AFormItem :rules="rules.width" label="Width" name="width">
+              <AInputNumber
+                v-model:value="displayWidth"
+                :min="0"
+                :precision="2"
+                :step="0.01"
+                placeholder="0.00"
+                style="width: 100%"
+              >
+                <template #addonAfter>{{ unit }}</template>
+              </AInputNumber>
+            </AFormItem>
+          </ACol>
+        </ARow>
       </ACol>
 
       <ACol :span="12">
         <div class="room-square">
-          <template v-if="area">
+          <template v-if="area !== null">
             <div class="room-square-area">{{ area }} m²</div>
             <div class="room-square-dims">
               {{ displayWidth?.toFixed(2) }} {{ unit }}
@@ -264,58 +234,28 @@ function handleKeyPress(event) {
           <div v-else class="room-square-dims">Enter width and length</div>
         </div>
       </ACol>
-
-      <ACol :span="24">
-        <AFlex class="button-section">
-          <AButton
-            v-if="isEditing"
-            :disabled="roomsStore.loading"
-            :loading="roomsStore.loading"
-            danger
-            type="default"
-            @click="handleDelete"
-          >
-            <DeleteOutlined />
-            Delete
-          </AButton>
-
-          <AButton
-            :disabled="roomsStore.loading"
-            :loading="roomsStore.loading"
-            form="room-form"
-            html-type="submit"
-            type="primary"
-          >
-            <PlusOutlined v-if="!isEditing" />
-            {{ isEditing ? 'Save Changes' : 'Add Room' }}
-          </AButton>
-        </AFlex>
-      </ACol>
     </ARow>
-  </Card>
+
+    <template #actions>
+      <AButton
+        v-if="isEditing"
+        :disabled="roomsStore.loading"
+        danger
+        type="default"
+        @click="handleDelete"
+      >
+        <DeleteOutlined />
+        Delete
+      </AButton>
+    </template>
+
+    <template #submit-icon>
+      <PlusOutlined v-if="!isEditing" />
+    </template>
+  </BaseForm>
 </template>
 
 <style scoped>
-.title {
-  color: var(--text-primary);
-  font: var(--body);
-  font-weight: bold;
-}
-
-.subtitle {
-  color: var(--text-secondary);
-  font: var(--body);
-}
-
-.button-section {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
-  gap: 0.75rem;
-  margin-top: 1rem;
-  width: 100%;
-}
-
 .room-square {
   display: flex;
   flex-direction: column;

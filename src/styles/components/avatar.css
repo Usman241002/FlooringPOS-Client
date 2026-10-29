@@ -1,0 +1,10 @@
+.avatar {
+  color: var(--text-secondary);
+  background-color: var(--border);
+  font-weight: bold;
+}
+
+.active-avatar {
+  background-color: var(--primary) !important;
+  color: var(--primary-bg) !important;
+}

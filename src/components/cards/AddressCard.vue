@@ -22,7 +22,7 @@ function handleEdit(address) {
     <RouterLink :to="`/measurements/${address.id}`" class="link">
       <AFlex class="left" vertical>
         <Body class="title"
-          >{{ address.addressLine1 }}{{ address.addressLine2 ? ', ' + address.addressLine2 : '' }}
+          >{{ address.line1 }}{{ address.line2 ? ', ' + address.line2 : '' }}
         </Body>
         <Label>{{ address.postcode }}</Label>
       </AFlex>
@@ -39,13 +39,6 @@ function handleEdit(address) {
   justify-content: space-between;
   width: 100%;
   padding: 0 var(--space-lg) 0 0;
-
-  transition: box-shadow 0.2s ease;
-  border: 2px solid transparent;
-}
-
-.address-container:hover {
-  box-shadow: 0 2px 8px rgb(0 0 0 / 10%);
 }
 
 .link:focus-visible {
