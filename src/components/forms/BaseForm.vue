@@ -1,8 +1,8 @@
 <script setup>
-import Card from '@/components/Card.vue'
 import Body from '@/components/typography/Body.vue'
 import { CloseOutlined } from '@ant-design/icons-vue'
 import { onMounted, onUnmounted } from 'vue'
+import Paper from '@/components/Paper.vue'
 
 const props = defineProps({
   title: {
@@ -57,7 +57,7 @@ function handleKeyPress(event) {
 </script>
 
 <template>
-  <Card :style="{ width: props.width }">
+  <Paper :style="{ width: props.width }">
     <template #header>
       <div class="form-header">
         <AFlex class="header-text" vertical>
@@ -95,7 +95,7 @@ function handleKeyPress(event) {
         </AButton>
       </AFlex>
     </AForm>
-  </Card>
+  </Paper>
 </template>
 
 <style scoped>

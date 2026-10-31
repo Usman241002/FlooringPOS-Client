@@ -21,8 +21,8 @@ const roomsStore = useRoomsStore()
 
 const form = reactive({
   name: '',
-  length: null,
-  width: null,
+  lengthM: null,
+  widthM: null,
 })
 
 const unit = ref('m')
@@ -70,10 +70,10 @@ const rules = {
 const isEditing = computed(() => !!props.room?.id)
 
 const area = computed(() => {
-  if (form.length == null || form.width == null) return null
-  if (form.length <= 0 || form.width <= 0) return null
+  if (form.lengthM == null || form.widthM == null) return null
+  if (form.lengthM <= 0 || form.widthM <= 0) return null
 
-  return (form.length * form.width).toFixed(2)
+  return (form.lengthM * form.widthM).toFixed(2)
 })
 
 const addressLabel = computed(() => {
@@ -87,16 +87,16 @@ const addressLabel = computed(() => {
 const round = (value, places) => Number(value.toFixed(places))
 
 const displayLength = computed({
-  get: () => (form.length == null ? null : round(form.length / unitFactors[unit.value], 2)),
+  get: () => (form.lengthM == null ? null : round(form.lengthM / unitFactors[unit.value], 2)),
   set: (value) => {
-    form.length = value == null ? null : round(value * unitFactors[unit.value], 3)
+    form.lengthM = value == null ? null : round(value * unitFactors[unit.value], 3)
   },
 })
 
 const displayWidth = computed({
-  get: () => (form.width == null ? null : round(form.width / unitFactors[unit.value], 2)),
+  get: () => (form.widthM == null ? null : round(form.widthM / unitFactors[unit.value], 2)),
   set: (value) => {
-    form.width = value == null ? null : round(value * unitFactors[unit.value], 3)
+    form.widthM = value == null ? null : round(value * unitFactors[unit.value], 3)
   },
 })
 
@@ -105,8 +105,8 @@ watch(
   (room) => {
     Object.assign(form, {
       name: room?.name ?? '',
-      length: room?.length ?? null,
-      width: room?.width ?? null,
+      lengthM: room?.lengthM ?? null,
+      widthM: room?.widthM ?? null,
     })
   },
   { immediate: true },
@@ -116,8 +116,8 @@ async function handleSubmit() {
   try {
     const payload = {
       name: form.name,
-      length: form.length,
-      width: form.width,
+      lengthM: form.lengthM,
+      widthM: form.widthM,
     }
 
     if (isEditing.value) {
@@ -204,7 +204,7 @@ function handleCancel() {
           </ACol>
 
           <ACol :span="12">
-            <AFormItem :rules="rules.width" label="Width" name="width">
+            <AFormItem :rules="rules.widthM" label="Width" name="width">
               <AInputNumber
                 v-model:value="displayWidth"
                 :min="0"

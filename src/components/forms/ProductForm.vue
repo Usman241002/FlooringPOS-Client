@@ -7,6 +7,7 @@ import useProductsStore from '@/stores/productsStore.js'
 import useBrandsStore from '@/stores/brandsStore.js'
 import useCategoriesStore from '@/stores/categoriesStore.js'
 import BaseForm from '@/components/forms/BaseForm.vue'
+import { DeleteOutlined } from '@ant-design/icons-vue'
 
 const { product } = defineProps({
   product: {
@@ -33,8 +34,6 @@ const form = reactive({
   brand: undefined,
   name: '',
   category: undefined,
-  sellingPriceM2: '',
-  costPriceM2: '',
   isActive: true,
 })
 
@@ -45,8 +44,6 @@ watch(
       brand: product?.brand?.id ?? product?.brand ?? undefined,
       name: product?.name ?? '',
       category: product?.category?.id ?? product?.category ?? undefined,
-      sellingPriceM2: product?.sellingPriceM2 ?? '',
-      costPriceM2: product?.costPriceM2 ?? '',
       isActive: product?.isActive ?? true,
     })
   },
@@ -88,8 +85,6 @@ function handleCancel() {
     brand: undefined,
     name: '',
     category: undefined,
-    sellingPriceM2: '',
-    costPriceM2: '',
     isActive: true,
   })
 
@@ -109,8 +104,6 @@ async function handleDelete(id) {
     brand: undefined,
     name: '',
     category: undefined,
-    sellingPriceM2: '',
-    costPriceM2: '',
     isActive: true,
   })
   emit('close')
@@ -126,8 +119,6 @@ const rules = {
       message: 'Please enter a product name',
     },
   ],
-  sellingPriceM2: [{ required: true, message: 'Enter a selling price' }],
-  costPriceM2: [{ required: true, message: 'Enter a cost price' }],
 }
 
 const emit = defineEmits(['close'])
@@ -136,15 +127,26 @@ const emit = defineEmits(['close'])
 <template>
   <BaseForm
     :loading="productsStore.loading"
+    :model="form"
     :submit-label="product ? 'Save Changes' : 'Add Product'"
     :subtitle="product ? 'Edit an existing product' : 'Add a new product'"
     :title="product ? 'Edit Product' : 'Add Product'"
-    model="form"
     @close="handleCancel"
     @submit="handleSubmit"
   >
+    <template #actions>
+      <AButton
+        v-if="product"
+        :disabled="productsStore.loading"
+        danger
+        @click="handleDelete(product.id)"
+      >
+        <DeleteOutlined />
+        Delete
+      </AButton>
+    </template>
     <ARow :gutter="[16, 0]">
-      <ACol :span="24">
+      <ACol :span="12">
         <AFormItem :rules="rules.brand" label="Brand" name="brand">
           <ASelect
             v-model:value="form.brand"
@@ -157,7 +159,7 @@ const emit = defineEmits(['close'])
           />
         </AFormItem>
       </ACol>
-      <ACol :span="24">
+      <ACol :span="12">
         <AFormItem :rules="rules.category" label="Category" name="category">
           <ASelect
             v-model:value="form.category"
@@ -174,34 +176,6 @@ const emit = defineEmits(['close'])
       <ACol :span="24">
         <AFormItem :rules="rules.name" label="Product name" name="name">
           <AInput v-model:value="form.name" placeholder="Enter product name" />
-        </AFormItem>
-      </ACol>
-
-      <ACol :sm="12" :xs="24">
-        <AFormItem :rules="rules.sellingPriceM2" label="Selling price / m²" name="sellingPriceM2">
-          <AInput
-            v-model:value="form.sellingPriceM2"
-            min="0"
-            placeholder="0.00"
-            step="0.01"
-            type="number"
-          >
-            <template #prefix>£</template>
-          </AInput>
-        </AFormItem>
-      </ACol>
-
-      <ACol :sm="12" :xs="24">
-        <AFormItem :rules="rules.costPriceM2" label="Cost price / m²" name="costPriceM2">
-          <AInput
-            v-model:value="form.costPriceM2"
-            min="0"
-            placeholder="0.00"
-            step="0.01"
-            type="number"
-          >
-            <template #prefix>£</template>
-          </AInput>
         </AFormItem>
       </ACol>
 

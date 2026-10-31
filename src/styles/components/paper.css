@@ -1,0 +1,10 @@
+.paper {
+  height: fit-content;
+  align-self: flex-start;
+  gap: 1rem;
+  display: flex;
+  border: 1px solid var(--border);
+  padding: 1rem;
+  background-color: var(--surface);
+  border-radius: 0.5rem;
+}

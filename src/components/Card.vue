@@ -1,15 +1,7 @@
-<script setup>
-import { useSlots } from 'vue'
-
-const slots = useSlots()
-</script>
+<script setup></script>
 
 <template>
   <AFlex class="card" vertical>
-    <AFlex v-if="slots.header" class="header">
-      <slot name="header" />
-    </AFlex>
-
     <AFlex class="body" vertical>
       <slot />
     </AFlex>
@@ -21,12 +13,5 @@ const slots = useSlots()
   height: fit-content;
   align-self: flex-start;
   gap: 1rem;
-}
-
-.header {
-  display: flex;
-  gap: 0.25rem;
-  justify-content: space-between;
-  align-items: center;
 }
 </style>

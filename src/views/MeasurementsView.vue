@@ -41,12 +41,14 @@ function closeForm() {
 <template>
   <Header>
     <template #title>Room Measurements</template>
-    <template #subtitle
-      >{{ addressesStore.address.line1
-      }}{{
-        addressesStore.address.postcode ? ', ' + addressesStore.address.postcode : ''
-      }}</template
-    >
+    <template #subtitle>
+      <template v-if="addressesStore.address">
+        {{ addressesStore.address.line1 }}
+        {{ addressesStore.address.postcode ? ', ' + addressesStore.address.postcode : '' }}
+      </template>
+
+      <template v-else-if="addressesStore.loading"> Loading address... </template>
+    </template>
     <template #actions>
       <AButton type="primary" @click="openCreateForm">
         <PlusOutlined />

@@ -1,8 +1,8 @@
 <script setup>
-import Card from '@/components/Card.vue'
 import Body from '@/components/typography/Body.vue'
 import RoomCard from '@/components/cards/RoomCard.vue'
 import useRoomsStore from '@/stores/roomsStore.js'
+import Paper from '@/components/Paper.vue'
 
 const { rooms } = defineProps({
   rooms: {
@@ -21,14 +21,14 @@ function handleClick(room) {
 </script>
 
 <template>
-  <Card class="card">
+  <Paper>
     <template #header>
       <AFlex vertical>
         <Body class="title"> Rooms </Body>
 
         <Body class="subtitle"
-          >{{ rooms.filter((room) => room.length && room.width).length }} measured •
-          {{ rooms.filter((room) => !(room.length && room.width)).length }} incomplete
+          >{{ rooms.filter((room) => room.lengthM && room.widthM).length }} measured •
+          {{ rooms.filter((room) => !(room.lengthM && room.widthM)).length }} incomplete
         </Body>
       </AFlex>
     </template>
@@ -41,7 +41,7 @@ function handleClick(room) {
         @click="handleClick(room)"
       />
     </AFlex>
-  </Card>
+  </Paper>
 </template>
 
 <style scoped>

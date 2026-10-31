@@ -5,12 +5,13 @@
   background-color: var(--surface);
   border-radius: 0.5rem;
 
-  transition: border-color 0.3s ease;
+  transition: background-color 0.3s ease;
 }
 
 .card:hover {
   transition: box-shadow 0.2s ease;
-  border: 2px solid transparent;
+  background-color: var(--primary-bg);
+
 }
 
 .active-card {

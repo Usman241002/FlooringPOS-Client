@@ -61,7 +61,7 @@ function editCustomer(customer) {
 }
 </script>
 <template>
-  <AFlex class="customer-lookup card" vertical>
+  <AFlex class="customer-lookup paper" vertical>
     <AInput
       v-model:value="searchQuery"
       allow-clear

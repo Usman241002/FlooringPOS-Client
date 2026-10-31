@@ -25,36 +25,9 @@ const columns = [
   { title: 'Name', dataIndex: 'name', key: 'name' },
   { title: 'Brand', dataIndex: 'brand', key: 'brand' },
   { title: 'Category', dataIndex: 'category', key: 'category' },
-  {
-    title: 'Sell/M²',
-    dataIndex: 'sellingPriceM2',
-    key: 'sellingPriceM2',
-  },
-  {
-    title: 'Cost/M²',
-    dataIndex: 'costPriceM2',
-    key: 'costPriceM2',
-  },
-  { title: 'Margin', dataIndex: 'margin', key: 'margin' },
   { title: 'Status', dataIndex: 'isActive', key: 'isActive' },
+  { title: 'Actions', key: 'actions' },
 ]
-
-function calculateMargin(record) {
-  const sellingPrice = Number(record.sellingPriceM2)
-  const costPrice = Number(record.costPriceM2)
-
-  if (
-    record.sellingPriceM2 == null ||
-    record.costPriceM2 == null ||
-    !Number.isFinite(sellingPrice) ||
-    !Number.isFinite(costPrice) ||
-    sellingPrice <= 0
-  ) {
-    return null
-  }
-
-  return ((sellingPrice - costPrice) / sellingPrice) * 100
-}
 
 function handleRowClick(record) {
   emit('edit', record)
@@ -87,39 +60,18 @@ function handleRowClick(record) {
           {{ record[column.key]?.name ?? record[column.key] ?? '—' }}
         </template>
 
-        <template v-else-if="column.key === 'sellingPriceM2'">
-          {{ record[column.key] != null ? `£${Number(record[column.key]).toFixed(2)}` : '—' }}
-        </template>
-
-        <template v-else-if="column.key === 'costPriceM2'" class="costPrice">
-          {{ record[column.key] != null ? `£${Number(record[column.key]).toFixed(2)}` : '—' }}
-        </template>
-
-        <template v-else-if="column.key === 'margin'">
-          <span
-            :class="{
-              'margin-positive': calculateMargin(record) > 0,
-              'margin-negative': calculateMargin(record) < 0,
-            }"
-          >
-            {{ calculateMargin(record) !== null ? `${calculateMargin(record).toFixed(1)}%` : '—' }}
-          </span>
-        </template>
-
         <template v-else-if="column.key === 'isActive'">
           <Tag v-if="record.isActive" variant="success">Active</Tag>
           <Tag v-else variant="inactive">Inactive</Tag>
         </template>
+
+        
       </template>
     </ATable>
   </div>
 </template>
 
 <style scoped>
-.table-container :deep(.costPrice) {
-  color: var(--text-secondary);
-}
-
 .table-container {
   width: 100%;
   border: 1px solid var(--border);
@@ -154,13 +106,6 @@ function handleRowClick(record) {
   background: var(--bg);
 }
 
-.margin-positive {
-  color: var(--success);
-}
-
-.margin-negative {
-  color: var(--danger);
-}
 .table-container :deep(.ant-table-pagination) {
   margin: var(--space-lg);
 }

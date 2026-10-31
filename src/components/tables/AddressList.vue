@@ -1,9 +1,9 @@
 <script setup>
-import Card from '@/components/Card.vue'
 import Body from '@/components/typography/Body.vue'
 import AddressCard from '@/components/cards/AddressCard.vue'
 import useCustomersStore from '@/stores/customersStore.js'
 import { PlusOutlined } from '@ant-design/icons-vue'
+import Paper from '@/components/Paper.vue'
 
 const customersStore = useCustomersStore()
 
@@ -19,7 +19,7 @@ function handleEdit(address) {
 </script>
 
 <template>
-  <Card class="address-list">
+  <Paper class="address-list">
     <template #header>
       <AFlex vertical>
         <Body class="title"> Address List </Body>
@@ -39,7 +39,7 @@ function handleEdit(address) {
         @edit="handleEdit"
       />
     </AFlex>
-  </Card>
+  </Paper>
 </template>
 
 <style scoped>

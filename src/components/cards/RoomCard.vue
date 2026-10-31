@@ -17,12 +17,12 @@ const props = defineProps({
 
 const emit = defineEmits(['click'])
 
-const isMeasured = () => Number(props.room.length) > 0 && Number(props.room.width) > 0
+const isMeasured = () => Number(props.room.lengthM) > 0 && Number(props.room.widthM) > 0
 
 const area = () => {
   if (!isMeasured()) return null
 
-  return Number(props.room.length) * Number(props.room.width)
+  return Number(props.room.lengthM) * Number(props.room.widthM)
 }
 </script>
 

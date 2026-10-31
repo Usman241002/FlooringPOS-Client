@@ -1,9 +1,9 @@
 <script setup>
-import Card from '@/components/Card.vue'
 import Label from '@/components/typography/Label.vue'
 import Body from '@/components/typography/Body.vue'
 import AddressCard from '@/components/cards/AddressCard.vue'
 import useAddressesStore from '@/stores/addressesStore.js'
+import Paper from '@/components/Paper.vue'
 
 const { customer } = defineProps({
   customer: {
@@ -21,7 +21,7 @@ function editAddress(address) {
 }
 </script>
 <template>
-  <Card class="customer-details-container">
+  <Paper class="customer-details-container">
     <AFlex class="top">
       <AAvatar class="avatar"> {{ customer.firstName?.[0] }}{{ customer.lastName?.[0] }} </AAvatar>
 
@@ -51,7 +51,7 @@ function editAddress(address) {
         />
       </AFlex>
     </AFlex>
-  </Card>
+  </Paper>
 </template>
 
 <style scoped>
